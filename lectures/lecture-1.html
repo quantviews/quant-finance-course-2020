@@ -1,0 +1,949 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Салихов Марсель (marcel.salikhov@gmail.com)" />
+  <meta name="date" content="2020-11-07" />
+  <meta name="copyright" content="НИУ ВШЭ. Салихов Марсель (marcel.salikhov@gmail.com)"/>
+  <title>Введение в R   “Количественные финансы”</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="libs/header-attrs-2.5/header-attrs.js"></script>
+  <link href="libs/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="libs/slidy-2/scripts/slidy.js"></script>
+  <script src="libs/slidy_shiny-1/slidy_shiny.js"></script>
+  <script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+  <script src="libs/plotly-binding-4.9.2.1/plotly.js"></script>
+  <script src="libs/typedarray-0.1/typedarray.min.js"></script>
+  <script src="libs/jquery-1.11.3/jquery.min.js"></script>
+  <link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+  <link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="styles.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Введение в R <br> “Количественные финансы”</h1>
+  <p class="author">
+Салихов Марсель (<a href="mailto:marcel.salikhov@gmail.com" class="email">marcel.salikhov@gmail.com</a>)
+  </p>
+  <p class="date">2020-11-07</p>
+</div>
+<div id="цели-лекции" class="slide section level2">
+<h1>Цели лекции</h1>
+<ul>
+<li>понять, что такое R (произносится как “аР” или “эР”), в чем его достоинства как инструмента количественного анализа</li>
+<li>получить базовые представления о типах данных в R</li>
+<li>понять, что такое векторизация в R</li>
+<li>научиться работать с датами в R</li>
+<li>получить навыки работы с пакетом <code>xts</code></li>
+<li>узнать, как можно строить графики в R</li>
+</ul>
+</div>
+<div id="что-такое-r" class="slide section level2">
+<h1>Что такое R?</h1>
+<ul>
+<li>R – язык программирования и платформа для статистического анализа, построения визуализаций (графиков) и много другого. К примеру, эта презентация сделана в R.</li>
+<li>R – наиболее широко используемое в мире средство для статистического анализа.</li>
+</ul>
+</div>
+<div id="почему-именно-r" class="slide section level2">
+<h1>Почему именно R?</h1>
+<ul>
+<li>R – устоявшийся, достаточно простой и эффективный язык программирования.</li>
+<li>Выполнение аналитической задачи в форме кода имеет большие преимущества: проще автоматизировать выполнение сложных задач, проще находить ошибки, проще вспомнить потом, что же было сделано.</li>
+<li><strong>Reproducible research</strong> – принцип проведения исследований в современном мире.</li>
+<li>R имеет огромную экосистему дополнительного функционала (пакетов), которые расширяют базовые возможности. Практически все современный статистические методы, которые вы можете себе представить, имеют реализацию в R. И все это – бесплатно!</li>
+<li>R реализует один из лучших функционалов по построению графиков и визуалазиации данных.</li>
+<li>Большая пользовательская база и эко-система. На (stackoverflow.com)[<a href="https://stackoverflow.com/questions/tagged/r" class="uri">https://stackoverflow.com/questions/tagged/r</a>] в настоящее время задано около 260 тыс. вопросов по R.</li>
+<li>R создан в первую не-программистами (а статистиками) для не-программистов. Не стоит бояться!</li>
+<li>Вы можете можете посмотреть исходный код любой функции из любого пакета и понять, как реализуется тот или иной метод – это не “черный ящик”.</li>
+<li>R одинаковым образом работает на всех современных платформах – Windows/Mac OS/Unix. R может работать и в браузере.</li>
+</ul>
+<p>Этот график тоже построен в R</p>
+<div id="htmlwidget-1741f2dd5422a849cf42" style="width:768px;height:576px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1741f2dd5422a849cf42">{"x":{"visdat":{"3bc849513d4b":["function () ","plotlyVisDat"]},"cur_data":"3bc849513d4b","attrs":{"3bc849513d4b":{"showscale":false,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","inherit":true},"3bc849513d4b.1":{"showscale":false,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","opacity":0.98,"inherit":true},"3bc849513d4b.2":{"showscale":false,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","opacity":0.98,"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"zaxis":{"title":"z"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"z<br />z2<br />z3","ticklen":2},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333335","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"z":[[8.83,8.92,8.8,8.91,8.97,9.2],[8.89,8.93,8.82,8.95,8.97,9.23],[8.81,8.91,8.78,8.94,8.91,9.2],[8.87,8.79,8.91,8.74,9.09,8.99],[8.9,8.85,8.94,8.81,9.11,8.99],[8.87,8.79,8.92,8.76,9.11,8.98],[8.89,8.9,8.75,8.93,9.04,9.18],[8.94,8.94,8.78,8.98,9.08,9.2],[8.85,8.92,8.77,8.99,9.05,9.19],[8.94,8.79,8.91,8.89,9.25,8.93],[8.96,8.88,8.95,8.99,9.28,8.97],[8.92,8.81,8.92,8.92,9.27,8.97],[8.84,8.9,8.8,9.1,9,9.18],[8.9,8.95,8.8,9.13,9.01,9.2],[8.82,8.92,8.77,9.11,9,9.18]],"type":"surface","frame":null},{"colorbar":{"title":"z<br />z2<br />z3","ticklen":2},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333335","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"z":[[9.83,9.92,9.8,9.91,9.97,10.2],[9.89,9.93,9.82,9.95,9.97,10.23],[9.81,9.91,9.78,9.94,9.91,10.2],[9.87,9.79,9.91,9.74,10.09,9.99],[9.9,9.85,9.94,9.81,10.11,9.99],[9.87,9.79,9.92,9.76,10.11,9.98],[9.89,9.9,9.75,9.93,10.04,10.18],[9.94,9.94,9.78,9.98,10.08,10.2],[9.85,9.92,9.77,9.99,10.05,10.19],[9.94,9.79,9.91,9.89,10.25,9.93],[9.96,9.88,9.95,9.99,10.28,9.97],[9.92,9.81,9.92,9.92,10.27,9.97],[9.84,9.9,9.8,10.1,10,10.18],[9.9,9.95,9.8,10.13,10.01,10.2],[9.82,9.92,9.77,10.11,10,10.18]],"type":"surface","opacity":0.98,"frame":null},{"colorbar":{"title":"z<br />z2<br />z3","ticklen":2},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333335","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"z":[[7.83,7.92,7.8,7.91,7.97,8.2],[7.89,7.93,7.82,7.95,7.97,8.23],[7.81,7.91,7.78,7.94,7.91,8.2],[7.87,7.79,7.91,7.74,8.09,7.99],[7.9,7.85,7.94,7.81,8.11,7.99],[7.87,7.79,7.92,7.76,8.11,7.98],[7.89,7.9,7.75,7.93,8.04,8.18],[7.94,7.94,7.78,7.98,8.08,8.2],[7.85,7.92,7.77,7.99,8.05,8.19],[7.94,7.79,7.91,7.89,8.25,7.93],[7.96,7.88,7.95,7.99,8.28,7.97],[7.92,7.81,7.92,7.92,8.27,7.97],[7.84,7.9,7.8,8.1,8,8.18],[7.9,7.95,7.8,8.13,8.01,8.2],[7.82,7.92,7.77,8.11,8,8.18]],"type":"surface","opacity":0.98,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="ограничения-r" class="slide section level2">
+<h1>Ограничения R</h1>
+<ul>
+<li>Кривая обучения – печатать команды в текстовом виде, а не выполнять манипуляции мышью в графическом интерфейсе с начала может показаться не очень удобным.</li>
+<li>Многие задачи в R могут выполняться разными способами, разными функциями – это запутывает.</li>
+<li>R все данные хранит в оперативной памяти. Объем данных для анализа ограничен памятью. Это ограничивает разработки очень Больших моделей.</li>
+<li>R не очень хорошо подходит для высокоскоростных вычислений в промышленном использовании или для решения очень больших задач, так как является медленным по сравнению с языками более низкого уровня.</li>
+</ul>
+</div>
+<div id="r-и-excel" class="slide section level2">
+<h1>R и Excel</h1>
+<ul>
+<li>Каждый инструмент – для своих задач. Надо уметь работать с разными инструментами для того, чтобы решать поставленную задачу оптимальным образом.<br />
+</li>
+<li>Excel – по сути отраслевой стандарт для выполнения простых и гибких количественных задач. Если вам необходимо “посмотреть” на данные и “потрогать” их, то Excel – лучший вариант. К примеру, если вы хотите быстро проанализировать финансовую отчетность определенной компании, то удобнее использовать Excel. Если вы хотите проанализировать отчетность 100 компаний и построить регрессию на их финансовых показателях – удобнее использовать R.</li>
+<li>Excel хорошо подходит для построения относительно несложных количественных моделей, так как вы наглядно видите, что происходит.</li>
+<li>Мы иногда будем использовать Excel для того, чтобы лучше понять суть того или иного метода.</li>
+</ul>
+<p><strong>НО: </strong></p>
+<ul>
+<li>Excel не дает работать с данными, даже относительно небольшими по современным стандартам. Попробуйте открыть в Excel файл, который содержит 100 тыс. строк и поработать с ним!</li>
+<li>В Excel можно строить сложные модели (и многие это делают!), но в таких моделях сложно найти ошибки (ошибки неизбежны) и поддерживать модели их. Известные примеры – данные Reinhart &amp; Rogoff, риск-менеджмент в JP Morgan.</li>
+<li>Excel, по сути, не поддерживает статистические вычисления и операции, кроме самых базовых.</li>
+<li>В Excel сложно и не оптимально работать с финансовыми данными.</li>
+</ul>
+</div>
+<div id="rpythonmatlab" class="slide section level2">
+<h1>R/Python/Matlab</h1>
+<ul>
+<li>Существует еще несколько альтернатив R, которые достаточно широко используются на практике.</li>
+<li><strong>Python</strong> – универсальный язык программирования, который также широко используется в количественных финансах. Python имеет одни из наиболее развитых и производительных библиотек для машинного обучения, но “отстает” в части статистических методов и пакетов. Производительность R и Python обычно сопоставимы между собой, однако Python имеет более удобные средства для оптимизации кода. Python, как правило, имеет более “лаконичный” синтаксис по сравнению с R.</li>
+<li><strong>Matlab</strong> – пакет прикладных программ для вычислений и язык программирования, разработанный компанией MathWorks. Преимущества – широкое распространение в отдельных отраслях науки/технологий, высокая скорость работы. Недостатки – достаточно запутанный синтаксис, коммерческий характер продукта, относительно низкая популярность по сравнению с R/Python.</li>
+<li>Необходимо выбирать средства под решаемую задачу, сам по себе выбор конкретного инструментария не так важен.</li>
+</ul>
+</div>
+<div id="установка-r" class="slide section level2">
+<h1>Установка R</h1>
+<ol style="list-style-type: decimal">
+<li>Зайти на <a href="https://cran.r-project.org/">CRAN</a> и установить R.</li>
+<li>Зайти на <a href="https://www.rstudio.com/">RStudio</a> и обязательно установить R Studio – более удобный и совершенный редактор (IDE) для R.</li>
+</ol>
+<ul>
+<li>R можно установить и на Windows/Mac OS/ Unix – разницы в функционале не будет.</li>
+<li>Для того, чтобы устанавливать пакеты необходимо иметь права администратора.</li>
+<li>Не устанавливайте R в свою рабочую папку, в особенности, если вы используете имя пользователя на кириллице (для Windows). Лучше изменить предлагаемую папку “по умолчанию” на что-то другое.</li>
+</ul>
+</div>
+<div id="изучение-r" class="slide section level2">
+<h1>Изучение R</h1>
+<ul>
+<li>для выполнения лабораторных работ я буду предоставлять базовый код для выполнения задачи и облегчу для вас ее выполнение. Вам не надо будет писать его с нуля. Однако постепенно вам самим придется также писать свой код.</li>
+<li>Лучшая способ научиться чему-либо – это практика.</li>
+<li>Ваша задача - 1) модифицировать код для вашего тикера/компании, которая будет назначена вам случайным образом 2) проинтерпретировать полученные результаты с содержательной точки зрения. К примеру, ваша модель значима или нет? как ее можно модифицировать? что показывают статистические тесты? 3)* писать свой собственный код<br />
+</li>
+<li>Вы можете дополнительно изучать R для того, чтобы лучше освоить задачи этого курса, а также использовать эти знания в будущем.</li>
+<li>Помощь по любой команде – ?название команды в консоли (к примеру, <code>?type</code>)</li>
+<li>Увидеть подсказку по аргументу функции: <code>название_функции()</code> + <code>скобки</code> + <code>Tab</code></li>
+</ul>
+</div>
+<div id="rstudio-основы" class="slide section level2">
+<h1>RStudio – основы</h1>
+<p><strong>RStudio</strong> представляет собой очень удобную среду (IDE) для работы в R, которая сильно облегчается жизнь.</p>
+<ul>
+<li>В <strong>консоли</strong> вы можете печатать команды для немедленного исполнения.</li>
+<li>Окно “Workspace” (правое верхнее) показывает все активные объекты/переменные (<code>Environment</code>). Вкладка <code>History</code> показывает все команды, которые вы вводили с начала сеанса работы.</li>
+<li>Вкладка «Files» отображает все файлы и папки в рабочем пространстве по умолчанию. На вкладке «Plots» будут показаны все ваши графики. На вкладке <code>packages</code> будет отображаться серия пакетов или надстроек, необходимых для запуска определенных процессов. Дополнительную информацию см. на вкладке <code>help</code></li>
+</ul>
+</div>
+<div id="команды-в-r" class="slide section level2">
+<h1>Команды в R</h1>
+<h3 id="базовые-операции">Базовые операции</h3>
+<p>Начнем с основ:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">print</span>(<span class="st">&quot;Hello world!&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Hello world!&quot;</code></pre>
+<p>Сообщения, начинающиеся со знака ##, – показывают результат вывода в консоли R.</p>
+<p>R работает и как калькулятор. Можно складывать переменные:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="dv">1</span><span class="op">+</span><span class="dv">3</span></span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>умножать:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="dv">2</span><span class="op">*</span><span class="dv">3</span></span></code></pre></div>
+<pre><code>## [1] 6</code></pre>
+<p>делить:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="dv">6</span><span class="op">/</span><span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<p>брать квадратный корень:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">sqrt</span>(<span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## [1] 2.236068</code></pre>
+<p>брать логарифм</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">log</span>(<span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## [1] 1.609438</code></pre>
+<p>возводить в степень</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="dv">2</span><span class="op">^</span><span class="dv">10</span></span></code></pre></div>
+<pre><code>## [1] 1024</code></pre>
+<p>логические операторы</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="dv">2</span> <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="co"># больше  </span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="dv">5</span> <span class="op">&gt;=</span><span class="st"> </span><span class="dv">5</span> <span class="co"># больше или равно</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="co"># Равно </span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="dv">1</span> <span class="op">!=</span><span class="st"> </span><span class="dv">0</span> <span class="co"># не равно</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="типы-данных" class="slide section level2">
+<h1>Типы данных</h1>
+<ul>
+<li>Всё в R – <strong>объекты</strong>. Объекты могут быть разных <strong>типов</strong> и <strong>классов</strong>. Узнать тип объекта можно с помощью команды <code>type</code>, класс объекта – командой <code>class</code>.</li>
+<li>R оперирует именованными структурами данным. Каждый объект имеет свое <strong>имя</strong>.</li>
+<li>Числа могут быть разных типов.</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="dv">2</span><span class="op">^</span><span class="dv">10</span></span></code></pre></div>
+<pre><code>## [1] 1024</code></pre>
+<p>Ими могут быть, десятичные числа. Они называются <code>numeric</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="fl">10.0</span>       <span class="co"># присвоить переменной x значение 10.5</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>x              <span class="co"># вывести значение x</span></span></code></pre></div>
+<pre><code>## [1] 10</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">class</span>(x)       <span class="co"># класс переменной х </span></span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">typeof</span>(x)      <span class="co"># тип переменной X  </span></span></code></pre></div>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="kw">is.numeric</span>(x)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Команды <code>=</code> и <code>&lt;-</code> идентичны и означают “присвоить значение”. Обычно использется <code>&lt;-</code>. В Rstudio есть удобное сочетание клавиш <code>Alt -</code> для того, чтобы написать эту комманду.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>x =<span class="st"> </span><span class="dv">5</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>x =<span class="st"> </span>x <span class="op">+</span><span class="dv">5</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a>x </span></code></pre></div>
+<pre><code>## [1] 10</code></pre>
+</div>
+<div id="целые-числа" class="slide section level2">
+<h1>Целые числа</h1>
+<p>Тип <code>integer</code></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>x =<span class="st"> </span><span class="kw">as.integer</span>(<span class="dv">3</span>)       <span class="co"># присвоить переменной x значение 3</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>y =<span class="st"> </span>10L</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a>x              <span class="co"># вывести значение x</span></span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a><span class="kw">class</span>(x)       <span class="co"># тип переменной х </span></span></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="kw">is.integer</span>(x)   <span class="co"># является ли x целым числом?</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a><span class="kw">is.integer</span>(y)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="логические-переменные" class="slide section level2">
+<h1>Логические переменные</h1>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>x =<span class="st"> </span><span class="dv">1</span>; y =<span class="st"> </span><span class="dv">2</span>   <span class="co"># sample values </span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a>z =<span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span>y </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a>z  </span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a><span class="kw">class</span>(z)   </span></code></pre></div>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<p>Логические операции</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>u =<span class="st"> </span><span class="ot">TRUE</span>; v =<span class="st"> </span><span class="ot">FALSE</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>u <span class="op">&amp;</span><span class="st"> </span>v          <span class="co"># u AND v </span></span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>u <span class="op">|</span><span class="st"> </span>v          <span class="co"># u OR v </span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="op">!</span>u      </span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a><span class="kw">class</span>(z)   </span></code></pre></div>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+</div>
+<div id="тип-character" class="slide section level2">
+<h1>Тип character</h1>
+<p><code>character</code> – строковая переменная. В R объекты этого типа выделены кавычками.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>x =<span class="st"> </span><span class="dv">1</span>  <span class="co"># присвоить x численное значение 1 </span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>y =<span class="st"> &#39;1&#39;</span> <span class="co"># присвоить y текстовое значение равное 1 </span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a><span class="kw">as.numeric</span>(y) <span class="co"># преобразовать y в тип numeric </span></span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a><span class="co">## попробуйте команду x + y , будет сообщение об ошибке </span></span></code></pre></div>
+<p>Обращайте внимание на такой, какой тип имеет переменная с которой вы работаете.</p>
+</div>
+<div id="тип-na" class="slide section level2">
+<h1>Тип NA</h1>
+<p>Специальный тип для обозначения <strong>пропущенных данных</strong> (missing value)</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="ot">NA</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a><span class="kw">is.na</span>(x)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true"></a><span class="kw">is.na</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="ot">NA</span>))</span></code></pre></div>
+<pre><code>## [1] FALSE  TRUE</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true"></a><span class="kw">is.na</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="вектор" class="slide section level2">
+<h1>Вектор</h1>
+<p>Вектор – тип данных, который состоит из упорядоченного набора объектов одного типа. Вектор можно создать с помощью команды <code>c</code>.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true"></a>b &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true"></a><span class="kw">is.vector</span>(a) <span class="co">## является ли a вектором</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true"></a> n =<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>) </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true"></a> s =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;aa&quot;</span>, <span class="st">&quot;bb&quot;</span>, <span class="st">&quot;cc&quot;</span>, <span class="st">&quot;dd&quot;</span>, <span class="st">&quot;ee&quot;</span>) </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true"></a> <span class="kw">c</span>(n, s) </span></code></pre></div>
+<pre><code>## [1] &quot;2&quot;  &quot;3&quot;  &quot;5&quot;  &quot;aa&quot; &quot;bb&quot; &quot;cc&quot; &quot;dd&quot; &quot;ee&quot;</code></pre>
+<p>Есть и другие варианты для создания векторов:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true"></a><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span></code></pre></div>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true"></a><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">2</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">by =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1]  2  4  6  8 10</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true"></a><span class="kw">seq</span>(<span class="dt">from=</span> <span class="dv">1</span>, <span class="dt">by =</span><span class="dv">2</span>, <span class="dt">length.out =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true"></a><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1 2 3 4 1 2 3 4</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true"></a><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">each =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1 1 2 2 3 3 4 4</code></pre>
+<p>Для векторов одинакой длины операции совершают поэлементно.</p>
+<p>У каждого вектора есть свой индекс (порядковый номер), к которому можно обратиться с помощью имени объекта (вектора) и квадратных скобок. Индекс начинается с ‘1’.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true"></a>s =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;d&quot;</span>, <span class="st">&quot;e&quot;</span>) </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true"></a>s[<span class="dv">3</span>] </span></code></pre></div>
+<pre><code>## [1] &quot;c&quot;</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true"></a>s[<span class="dv">10</span>] <span class="co"># нет 10 элемента, поэтому NA</span></span></code></pre></div>
+<pre><code>## [1] NA</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true"></a>s[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true"></a>s[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)]</span></code></pre></div>
+<pre><code>## [1] &quot;a&quot; &quot;c&quot; &quot;e&quot;</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true"></a>s[<span class="op">-</span><span class="dv">3</span>] <span class="co"># убрать третий элемент</span></span></code></pre></div>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;d&quot; &quot;e&quot;</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true"></a>s[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)]</span></code></pre></div>
+<pre><code>## [1] &quot;c&quot; &quot;d&quot; &quot;e&quot;</code></pre>
+</div>
+<div id="векторизация-операций" class="slide section level2">
+<h1>Векторизация операций</h1>
+<ul>
+<li>Преимущество R – так называемая <strong>векторизация операций</strong>. Это означает, что вы можете осуществлять операции над векторами, точно так же, как и над отдельными числами.</li>
+<li>Векторизация обеспечивает скорость, а также избавляет от необходимости писать циклы <code>for</code>.</li>
+<li>На самом деле любой единичный объект – это вектор с длиной 1.</li>
+</ul>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true"></a>a </span></code></pre></div>
+<pre><code>## [1] 1 2 3</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true"></a>b</span></code></pre></div>
+<pre><code>## [1] 4 5 6</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true"></a>a<span class="op">+</span>b</span></code></pre></div>
+<pre><code>## [1] 5 7 9</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true"></a>a <span class="op">*</span>b</span></code></pre></div>
+<pre><code>## [1]  4 10 18</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true"></a><span class="kw">log</span>(a)</span></code></pre></div>
+<pre><code>## [1] 0.0000000 0.6931472 1.0986123</code></pre>
+<p>Операции могут выполняться и с векторами разной длины. В этом случае используется “выравнивание векторов”" (recycling rule).</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true"></a>u =<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>) </span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true"></a>v =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>) </span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true"></a>u <span class="op">+</span><span class="st"> </span>v </span></code></pre></div>
+<pre><code>## [1] 11 22 33 14 25 36 17 28 39</code></pre>
+<p>В чем оно заключается?</p>
+<p>с помощью функции ‘length’ можно узнать длину вектора</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true"></a>u =<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>) </span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true"></a><span class="kw">length</span>(u)</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="типа-matrix" class="slide section level2">
+<h1>Типа matrix</h1>
+<p>matrix – набор количественных данных, упорядоченных в двумерную таблицу.</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true"></a>B  =<span class="st"> </span><span class="kw">matrix</span>(</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true"></a>   <span class="dt">data =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>),</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true"></a>   <span class="dt">nrow =</span> <span class="dv">2</span>,</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true"></a>   <span class="dt">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true"></a>   <span class="dt">byrow =</span> <span class="ot">TRUE</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true"></a>   )</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true"></a></span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true"></a>B</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    2    4    1
+## [2,]    3    5    7</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true"></a>B[<span class="dv">2</span>,<span class="dv">3</span>] <span class="co"># 2 строка, 3 столбец</span></span></code></pre></div>
+<pre><code>## [1] 7</code></pre>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true"></a>B[<span class="dv">2</span>,] <span class="co"># 2 строка</span></span></code></pre></div>
+<pre><code>## [1] 3 5 7</code></pre>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true"></a>B[,<span class="dv">1</span>] <span class="co"># 1 столбец</span></span></code></pre></div>
+<pre><code>## [1] 2 3</code></pre>
+<p>над матрицами можно также совершать операции</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true"></a>C &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>),<span class="dv">3</span>,<span class="dv">2</span>)</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true"></a>B</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    2    4    1
+## [2,]    3    5    7</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true"></a>C</span></code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    1    1
+## [2,]    4    2
+## [3,]   -2    1</code></pre>
+</div>
+<div id="тип-data-frame" class="slide section level2">
+<h1>Тип data frame</h1>
+<p><code>data frame</code> – это набор (коллекция) векторов, объединенных в один объект. Каждый столбец <code>data frame</code> – вектор. Каждая строка – наблюдение. Большинство структурированных данных хранится в качестве <code>data frame</code>.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true"></a><span class="kw">str</span>(mtcars) <span class="co"># посмотреть структуру объекта  </span></span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...</code></pre>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true"></a><span class="kw">dim</span>(mtcars) <span class="co"># размерность объекта, количество наблюдений и переменных </span></span></code></pre></div>
+<pre><code>## [1] 32 11</code></pre>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true"></a><span class="kw">length</span>(mtcars) <span class="co"># длина -- количество переменных </span></span></code></pre></div>
+<pre><code>## [1] 11</code></pre>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true"></a><span class="kw">head</span>(mtcars) <span class="co"># первые 5 строк </span></span></code></pre></div>
+<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true"></a><span class="kw">head</span>(mtcars, <span class="dt">n =</span> <span class="dv">2</span>) <span class="co"># first 2 rows of data.frame</span></span></code></pre></div>
+<pre><code>##               mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4</code></pre>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true"></a><span class="kw">tail</span>(mtcars) <span class="co"># последние 5 строк </span></span></code></pre></div>
+<pre><code>##                 mpg cyl  disp  hp drat    wt qsec vs am gear carb
+## Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2
+## Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2
+## Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4
+## Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6
+## Maserati Bora  15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8
+## Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.6  1  1    4    2</code></pre>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true"></a><span class="kw">tail</span>(mtcars, <span class="dt">n =</span> <span class="dv">3</span>) <span class="co"># last 3 rows of data.frame</span></span></code></pre></div>
+<pre><code>##                mpg cyl disp  hp drat   wt qsec vs am gear carb
+## Ferrari Dino  19.7   6  145 175 3.62 2.77 15.5  0  1    5    6
+## Maserati Bora 15.0   8  301 335 3.54 3.57 14.6  0  1    5    8
+## Volvo 142E    21.4   4  121 109 4.11 2.78 18.6  1  1    4    2</code></pre>
+<p>Существуют разные способы обратиться к элементам <code>data frame</code>.</p>
+<p>К примеру, к отдельной колонке (переменной) можно обратиться следующими способами:</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true"></a>mtcars[<span class="dv">9</span>] <span class="co">#  номер внутри двойных скобок</span></span></code></pre></div>
+<pre><code>##                     am
+## Mazda RX4            1
+## Mazda RX4 Wag        1
+## Datsun 710           1
+## Hornet 4 Drive       0
+## Hornet Sportabout    0
+## Valiant              0
+## Duster 360           0
+## Merc 240D            0
+## Merc 230             0
+## Merc 280             0
+## Merc 280C            0
+## Merc 450SE           0
+## Merc 450SL           0
+## Merc 450SLC          0
+## Cadillac Fleetwood   0
+## Lincoln Continental  0
+## Chrysler Imperial    0
+## Fiat 128             1
+## Honda Civic          1
+## Toyota Corolla       1
+## Toyota Corona        0
+## Dodge Challenger     0
+## AMC Javelin          0
+## Camaro Z28           0
+## Pontiac Firebird     0
+## Fiat X1-9            1
+## Porsche 914-2        1
+## Lotus Europa         1
+## Ford Pantera L       1
+## Ferrari Dino         1
+## Maserati Bora        1
+## Volvo 142E           1</code></pre>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true"></a><span class="kw">class</span>(mtcars[<span class="dv">9</span>])</span></code></pre></div>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true"></a>mtcars[[<span class="dv">9</span>]] <span class="co">#  номер внутри двойных скобок</span></span></code></pre></div>
+<pre><code>##  [1] 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1</code></pre>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true"></a><span class="kw">class</span>(mtcars[[<span class="dv">9</span>]])</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true"></a>mtcars<span class="op">$</span>am</span></code></pre></div>
+<pre><code>##  [1] 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1</code></pre>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true"></a>mtcars[, <span class="st">&#39;am&#39;</span>]</span></code></pre></div>
+<pre><code>##  [1] 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1</code></pre>
+<p>К строкам можно обратиться следующими способами:</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true"></a>mtcars[<span class="dv">24</span>,] <span class="co"># индекс по номеру </span></span></code></pre></div>
+<pre><code>##             mpg cyl disp  hp drat   wt  qsec vs am gear carb
+## Camaro Z28 13.3   8  350 245 3.73 3.84 15.41  0  0    3    4</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true"></a>mtcars[<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">24</span>),] <span class="co">#3,24 строка</span></span></code></pre></div>
+<pre><code>##             mpg cyl disp  hp drat   wt  qsec vs am gear carb
+## Datsun 710 22.8   4  108  93 3.85 2.32 18.61  1  1    4    1
+## Camaro Z28 13.3   8  350 245 3.73 3.84 15.41  0  0    3    4</code></pre>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true"></a>L =<span class="st"> </span>mtcars<span class="op">$</span>am <span class="op">==</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true"></a>L</span></code></pre></div>
+<pre><code>##  [1] FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [13]  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE
+## [25]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true"></a> mtcars[L,] </span></code></pre></div>
+<pre><code>##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2</code></pre>
+</div>
+<div id="тип-date" class="slide section level2">
+<h1>Тип Date</h1>
+<p>Тип <code>Date</code> представляет календарные даты. Финансовые серии как правило представляют собой временный ряд, упорядоченный во времени. Поэтому эффективная работа с данными важна для финансового анализа</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true"></a><span class="kw">date</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;Sat Nov 07 21:11:10 2020&quot;</code></pre>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true"></a>today &lt;-<span class="st"> </span><span class="kw">Sys.Date</span>()</span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true"></a>today</span></code></pre></div>
+<pre><code>## [1] &quot;2020-11-07&quot;</code></pre>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true"></a><span class="kw">class</span>(today)</span></code></pre></div>
+<pre><code>## [1] &quot;Date&quot;</code></pre>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true"></a><span class="kw">as.numeric</span>(today) <span class="co"># внутри переменная Date представляет собой количество дней с 1 января 1970 года</span></span></code></pre></div>
+<pre><code>## [1] 18573</code></pre>
+<p>Даты можно представлять различным образом с помощью функции format</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true"></a><span class="kw">format</span>(today,  <span class="dt">format =</span> <span class="st">&quot;%d %b %Y&quot;</span>)  <span class="co"># with month as a word</span></span></code></pre></div>
+<pre><code>## [1] &quot;07 mn 2020&quot;</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Символ</th>
+<th>Значение</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>%d</td>
+<td>день как число (0-31)</td>
+<td>31</td>
+</tr>
+<tr class="even">
+<td>%a</td>
+<td>сокращенный день недели</td>
+<td>вт</td>
+</tr>
+<tr class="odd">
+<td>%A</td>
+<td>день недели</td>
+<td>Вторник</td>
+</tr>
+<tr class="even">
+<td>%m</td>
+<td>месяц (00-12)</td>
+<td>00-12</td>
+</tr>
+<tr class="odd">
+<td>%b</td>
+<td>сокращенный месяц</td>
+<td>ноя</td>
+</tr>
+<tr class="even">
+<td>%B</td>
+<td>полный месяц</td>
+<td>ноября</td>
+</tr>
+<tr class="odd">
+<td>%y</td>
+<td>2-значный год</td>
+<td>18</td>
+</tr>
+<tr class="even">
+<td>%Y</td>
+<td>4-значный год</td>
+<td>2018</td>
+</tr>
+</tbody>
+</table>
+<p>Что делать, если мы хотим даты на английском языке?</p>
+<p>Нужно поменять параметры языка для вашей системы и потом вернуть их обратно</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true"></a><span class="kw">Sys.getlocale</span>() <span class="co">#&quot;ru_RU.UTF-8/ru_RU.UTF-8/ru_RU.UTF-8/C/ru_RU.UTF-8/ru_RU.UTF-8&quot;</span></span></code></pre></div>
+<pre><code>## [1] &quot;LC_COLLATE=Russian_Russia.1251;LC_CTYPE=Russian_Russia.1251;LC_MONETARY=Russian_Russia.1251;LC_NUMERIC=C;LC_TIME=Russian_Russia.1251&quot;</code></pre>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true"></a><span class="kw">Sys.setlocale</span>(<span class="dt">locale =</span> <span class="st">&#39;C&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;C&quot;</code></pre>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true"></a><span class="kw">format</span>(today,  <span class="dt">format =</span> <span class="st">&quot;%d %b %Y&quot;</span>)  <span class="co"># with month as a word</span></span></code></pre></div>
+<pre><code>## [1] &quot;07 Nov 2020&quot;</code></pre>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true"></a><span class="kw">Sys.setlocale</span>(<span class="dt">locale =</span> <span class="st">&quot;ru_RU.UTF-8&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in Sys.setlocale(locale = &quot;ru_RU.UTF-8&quot;): РћРЎ СЃРѕРѕР±С‰Р°РµС‚,
+## С‡С‚Рѕ Р·Р°РїСЂРѕСЃ СѓСЃС‚Р°РЅРѕРІРєРё Р»РѕРєР°Р»Рё РІ &quot;ru_RU.UTF-8&quot; РЅРµ
+## РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅ</code></pre>
+<pre><code>## [1] &quot;&quot;</code></pre>
+<p>можно создавать вектора дат</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true"></a>dt =<span class="st"> </span><span class="kw">seq</span>(today, <span class="dt">length.out=</span><span class="dv">10</span>, <span class="dt">by=</span><span class="st">&quot;1 week&quot;</span>)</span>
+<span id="cb169-2"><a href="#cb169-2" aria-hidden="true"></a>dt</span></code></pre></div>
+<pre><code>##  [1] &quot;2020-11-07&quot; &quot;2020-11-14&quot; &quot;2020-11-21&quot; &quot;2020-11-28&quot; &quot;2020-12-05&quot;
+##  [6] &quot;2020-12-12&quot; &quot;2020-12-19&quot; &quot;2020-12-26&quot; &quot;2021-01-02&quot; &quot;2021-01-09&quot;</code></pre>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true"></a><span class="kw">weekdays</span>(today)</span></code></pre></div>
+<pre><code>## [1] &quot;Saturday&quot;</code></pre>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true"></a><span class="kw">months</span>(today)</span></code></pre></div>
+<pre><code>## [1] &quot;November&quot;</code></pre>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true"></a>dt <span class="dv">-1</span></span></code></pre></div>
+<pre><code>##  [1] &quot;2020-11-06&quot; &quot;2020-11-13&quot; &quot;2020-11-20&quot; &quot;2020-11-27&quot; &quot;2020-12-04&quot;
+##  [6] &quot;2020-12-11&quot; &quot;2020-12-18&quot; &quot;2020-12-25&quot; &quot;2021-01-01&quot; &quot;2021-01-08&quot;</code></pre>
+<p>Можно делать конвертацию между типами <code>character</code> и <code>Date</code> c помощью функций <code>as.Date</code> и <code>as.character</code>.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true"></a><span class="kw">as.character</span>(today)</span></code></pre></div>
+<pre><code>## [1] &quot;2020-11-07&quot;</code></pre>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true"></a>str =<span class="st"> &#39;2018-11-06&#39;</span> <span class="co">#  yyyy-mm-dd - стандартный формат представления даты </span></span>
+<span id="cb179-2"><a href="#cb179-2" aria-hidden="true"></a><span class="kw">as.Date</span>(str)</span></code></pre></div>
+<pre><code>## [1] &quot;2018-11-06&quot;</code></pre>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1" aria-hidden="true"></a><span class="kw">as.Date</span>(<span class="st">&#39;2018 ноября 6&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y %B %d&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] NA</code></pre>
+<p>преобразуйте в тип Date следующую строку: <code>16 ноя, 2018</code>.</p>
+</div>
+<div id="тип-xts-временной-ряд" class="slide section level2">
+<h1>Тип xts – временной ряд</h1>
+<p>В R есть несколько специальных типов данных для работы с временными рядами. Один из них – <code>xts</code> (extendible time series).</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="#cb183-1" aria-hidden="true"></a><span class="co">#install.packages(xts) # установать пакет </span></span>
+<span id="cb183-2"><a href="#cb183-2" aria-hidden="true"></a><span class="kw">library</span>(xts) <span class="co"># загрузить пакет</span></span></code></pre></div>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="#cb187-1" aria-hidden="true"></a><span class="kw">data</span>(sample_matrix)</span>
+<span id="cb187-2"><a href="#cb187-2" aria-hidden="true"></a></span>
+<span id="cb187-3"><a href="#cb187-3" aria-hidden="true"></a>df_xts &lt;-<span class="st"> </span><span class="kw">as.xts</span>(<span class="kw">as.data.frame</span>(sample_matrix),</span>
+<span id="cb187-4"><a href="#cb187-4" aria-hidden="true"></a>                 <span class="dt">important =</span> <span class="st">&#39;very important info!&#39;</span>)</span>
+<span id="cb187-5"><a href="#cb187-5" aria-hidden="true"></a><span class="kw">str</span>(df_xts)</span></code></pre></div>
+<pre><code>## An &#39;xts&#39; object on 2007-01-02/2007-06-30 containing:
+##   Data: num [1:180, 1:4] 50 50.2 50.4 50.4 50.2 ...
+##  - attr(*, &quot;dimnames&quot;)=List of 2
+##   ..$ : NULL
+##   ..$ : chr [1:4] &quot;Open&quot; &quot;High&quot; &quot;Low&quot; &quot;Close&quot;
+##   Indexed by objects of class: [POSIXct,POSIXt] TZ: 
+##   xts Attributes:  
+## List of 1
+##  $ important: chr &quot;very important info!&quot;</code></pre>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="#cb189-1" aria-hidden="true"></a><span class="kw">xts</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="kw">Sys.Date</span>()<span class="op">+</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##            [,1]
+## 2020-11-08    1
+## 2020-11-09    2
+## 2020-11-10    3
+## 2020-11-11    4
+## 2020-11-12    5
+## 2020-11-13    6
+## 2020-11-14    7
+## 2020-11-15    8
+## 2020-11-16    9
+## 2020-11-17   10</code></pre>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">index</span>(df_xts))</span></code></pre></div>
+<pre><code>## [1] &quot;2007-01-02 MSK&quot; &quot;2007-01-03 MSK&quot; &quot;2007-01-04 MSK&quot; &quot;2007-01-05 MSK&quot;
+## [5] &quot;2007-01-06 MSK&quot; &quot;2007-01-07 MSK&quot;</code></pre>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="#cb193-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">coredata</span>(df_xts))</span></code></pre></div>
+<pre><code>##          Open     High      Low    Close
+## [1,] 50.03978 50.11778 49.95041 50.11778
+## [2,] 50.23050 50.42188 50.23050 50.39767
+## [3,] 50.42096 50.42096 50.26414 50.33236
+## [4,] 50.37347 50.37347 50.22103 50.33459
+## [5,] 50.24433 50.24433 50.11121 50.18112
+## [6,] 50.13211 50.21561 49.99185 49.99185</code></pre>
+<p>Основное удобство работы с объектами типа <code>xts</code> – удобные способы получать срезы исходных данных и возможность работать с датами:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true"></a>df_xts[<span class="st">&#39;2007-01-06&#39;</span>] <span class="co"># отдельная дата </span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-01-06 50.24433 50.24433 50.11121 50.18112</code></pre>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true"></a>df_xts[<span class="st">&#39;2007-03&#39;</span>] <span class="co"># отдельный месяц </span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-03-01 50.81620 50.81620 50.56451 50.57075
+## 2007-03-02 50.60980 50.72061 50.50808 50.61559
+## 2007-03-03 50.73241 50.73241 50.40929 50.41033
+## 2007-03-04 50.39273 50.40881 50.24922 50.32636
+## 2007-03-05 50.26501 50.34050 50.26501 50.29567
+## 2007-03-06 50.27464 50.32019 50.16380 50.16380
+## 2007-03-07 50.14458 50.20278 49.91381 49.91381
+## 2007-03-08 49.93149 50.00364 49.84893 49.91839
+## 2007-03-09 49.92377 49.92377 49.74242 49.80712
+## 2007-03-10 49.79370 49.88984 49.70385 49.88698
+## 2007-03-11 49.83062 49.88295 49.76031 49.78806
+## 2007-03-12 49.82763 49.90311 49.67049 49.74033
+## 2007-03-13 49.69628 49.70863 49.37924 49.37924
+## 2007-03-14 49.36270 49.53735 49.30746 49.53735
+## 2007-03-15 49.57374 49.62310 49.39876 49.49600
+## 2007-03-16 49.44900 49.65285 49.42416 49.59500
+## 2007-03-17 49.55666 49.55666 49.33564 49.34714
+## 2007-03-18 49.29778 49.67857 49.29778 49.65463
+## 2007-03-19 49.62747 49.65407 49.51604 49.54590
+## 2007-03-20 49.59529 49.62003 49.42321 49.50690
+## 2007-03-21 49.49765 49.53961 49.41610 49.51807
+## 2007-03-22 49.42306 49.42306 49.31184 49.39687
+## 2007-03-23 49.27281 49.27281 48.93095 48.93095
+## 2007-03-24 48.86635 48.86635 48.52684 48.52684
+## 2007-03-25 48.50649 48.50649 48.33409 48.33973
+## 2007-03-26 48.34210 48.44637 48.28969 48.28969
+## 2007-03-27 48.25248 48.41572 48.23648 48.30851
+## 2007-03-28 48.33090 48.53595 48.33090 48.53595
+## 2007-03-29 48.59236 48.69988 48.57432 48.69988
+## 2007-03-30 48.74562 49.00218 48.74562 48.93546
+## 2007-03-31 48.95616 49.09728 48.95616 48.97490</code></pre>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true"></a><span class="kw">head</span>(df_xts[<span class="st">&#39;/2007-01-07&#39;</span>]) <span class="co"># с начала до 7 января 2007</span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-01-02 50.03978 50.11778 49.95041 50.11778
+## 2007-01-03 50.23050 50.42188 50.23050 50.39767
+## 2007-01-04 50.42096 50.42096 50.26414 50.33236
+## 2007-01-05 50.37347 50.37347 50.22103 50.33459
+## 2007-01-06 50.24433 50.24433 50.11121 50.18112
+## 2007-01-07 50.13211 50.21561 49.99185 49.99185</code></pre>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true"></a><span class="kw">head</span>(df_xts[<span class="st">&#39;2007-06-25/&#39;</span>]) <span class="co"># с 25 июня 2007 года до конца </span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-06-25 47.20471 47.42772 47.13405 47.42772
+## 2007-06-26 47.44300 47.61611 47.44300 47.61611
+## 2007-06-27 47.62323 47.71673 47.60015 47.62769
+## 2007-06-28 47.67604 47.70460 47.57241 47.60716
+## 2007-06-29 47.63629 47.77563 47.61733 47.66471
+## 2007-06-30 47.67468 47.94127 47.67468 47.76719</code></pre>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true"></a><span class="kw">head</span>(df_xts[<span class="st">&quot;2007&quot;</span>])</span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-01-02 50.03978 50.11778 49.95041 50.11778
+## 2007-01-03 50.23050 50.42188 50.23050 50.39767
+## 2007-01-04 50.42096 50.42096 50.26414 50.33236
+## 2007-01-05 50.37347 50.37347 50.22103 50.33459
+## 2007-01-06 50.24433 50.24433 50.11121 50.18112
+## 2007-01-07 50.13211 50.21561 49.99185 49.99185</code></pre>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true"></a>df_xts[<span class="st">&#39;2007-03&#39;</span>]</span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-03-01 50.81620 50.81620 50.56451 50.57075
+## 2007-03-02 50.60980 50.72061 50.50808 50.61559
+## 2007-03-03 50.73241 50.73241 50.40929 50.41033
+## 2007-03-04 50.39273 50.40881 50.24922 50.32636
+## 2007-03-05 50.26501 50.34050 50.26501 50.29567
+## 2007-03-06 50.27464 50.32019 50.16380 50.16380
+## 2007-03-07 50.14458 50.20278 49.91381 49.91381
+## 2007-03-08 49.93149 50.00364 49.84893 49.91839
+## 2007-03-09 49.92377 49.92377 49.74242 49.80712
+## 2007-03-10 49.79370 49.88984 49.70385 49.88698
+## 2007-03-11 49.83062 49.88295 49.76031 49.78806
+## 2007-03-12 49.82763 49.90311 49.67049 49.74033
+## 2007-03-13 49.69628 49.70863 49.37924 49.37924
+## 2007-03-14 49.36270 49.53735 49.30746 49.53735
+## 2007-03-15 49.57374 49.62310 49.39876 49.49600
+## 2007-03-16 49.44900 49.65285 49.42416 49.59500
+## 2007-03-17 49.55666 49.55666 49.33564 49.34714
+## 2007-03-18 49.29778 49.67857 49.29778 49.65463
+## 2007-03-19 49.62747 49.65407 49.51604 49.54590
+## 2007-03-20 49.59529 49.62003 49.42321 49.50690
+## 2007-03-21 49.49765 49.53961 49.41610 49.51807
+## 2007-03-22 49.42306 49.42306 49.31184 49.39687
+## 2007-03-23 49.27281 49.27281 48.93095 48.93095
+## 2007-03-24 48.86635 48.86635 48.52684 48.52684
+## 2007-03-25 48.50649 48.50649 48.33409 48.33973
+## 2007-03-26 48.34210 48.44637 48.28969 48.28969
+## 2007-03-27 48.25248 48.41572 48.23648 48.30851
+## 2007-03-28 48.33090 48.53595 48.33090 48.53595
+## 2007-03-29 48.59236 48.69988 48.57432 48.69988
+## 2007-03-30 48.74562 49.00218 48.74562 48.93546
+## 2007-03-31 48.95616 49.09728 48.95616 48.97490</code></pre>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true"></a><span class="kw">first</span>(df_xts, <span class="st">&#39;1 week&#39;</span>) <span class="co"># 1 неделя </span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-01-02 50.03978 50.11778 49.95041 50.11778
+## 2007-01-03 50.23050 50.42188 50.23050 50.39767
+## 2007-01-04 50.42096 50.42096 50.26414 50.33236
+## 2007-01-05 50.37347 50.37347 50.22103 50.33459
+## 2007-01-06 50.24433 50.24433 50.11121 50.18112
+## 2007-01-07 50.13211 50.21561 49.99185 49.99185
+## 2007-01-08 50.03555 50.10363 49.96971 49.98806</code></pre>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true"></a><span class="kw">first</span>(<span class="kw">last</span>(df_xts,<span class="st">&#39;1 week&#39;</span>),<span class="st">&#39;3 days&#39;</span>) <span class="co"># что это означает? </span></span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-06-26 47.44300 47.61611 47.44300 47.61611
+## 2007-06-27 47.62323 47.71673 47.60015 47.62769
+## 2007-06-28 47.67604 47.70460 47.57241 47.60716</code></pre>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">coredata</span>(df_xts))</span></code></pre></div>
+<pre><code>##          Open     High      Low    Close
+## [1,] 50.03978 50.11778 49.95041 50.11778
+## [2,] 50.23050 50.42188 50.23050 50.39767
+## [3,] 50.42096 50.42096 50.26414 50.33236
+## [4,] 50.37347 50.37347 50.22103 50.33459
+## [5,] 50.24433 50.24433 50.11121 50.18112
+## [6,] 50.13211 50.21561 49.99185 49.99185</code></pre>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">index</span>(df_xts))</span></code></pre></div>
+<pre><code>## [1] &quot;2007-01-02 MSK&quot; &quot;2007-01-03 MSK&quot; &quot;2007-01-04 MSK&quot; &quot;2007-01-05 MSK&quot;
+## [5] &quot;2007-01-06 MSK&quot; &quot;2007-01-07 MSK&quot;</code></pre>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true"></a><span class="kw">tzone</span>(df_xts)</span></code></pre></div>
+<pre><code>## [1] &quot;&quot;</code></pre>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true"></a> days &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2007-05-03&quot;</span>,<span class="st">&quot;2007-05-23&quot;</span>)</span>
+<span id="cb217-2"><a href="#cb217-2" aria-hidden="true"></a>df_xts[days]</span></code></pre></div>
+<pre><code>##                Open     High      Low    Close
+## 2007-05-03 49.46328 49.69097 49.46328 49.58677
+## 2007-05-23 47.93593 48.08242 47.88763 47.90068</code></pre>
+<p><code>xts</code> предоставляет возможность менять перидоичность данных</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="#cb219-1" aria-hidden="true"></a><span class="kw">to.monthly</span>(df_xts)</span></code></pre></div>
+<pre><code>##          df_xts.Open df_xts.High df_xts.Low df_xts.Close
+## Jan 2007    50.03978    50.77336   49.76308     50.22578
+## Feb 2007    50.22448    51.32342   50.19101     50.77091
+## Mar 2007    50.81620    50.81620   48.23648     48.97490
+## Apr 2007    48.94407    50.33781   48.80962     49.33974
+## May 2007    49.34572    49.69097   47.51796     47.73780
+## Jun 2007    47.74432    47.94127   47.09144     47.76719</code></pre>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="#cb221-1" aria-hidden="true"></a><span class="kw">nmonths</span>(df_xts)</span></code></pre></div>
+<pre><code>## [1] 6</code></pre>
+</div>
+<div id="построение-графиков" class="slide section level2">
+<h1>Построение графиков</h1>
+<ul>
+<li>R имеет одну из лучших систем построения и визуализации данных.</li>
+<li>Существует несколько разных систем для построения графиков. В данном случае мы используем базовую (base) систему.</li>
+<li>Команда <code>rnorm</code> используется для генерировани случайных чисел, распределенных нормально <span class="math inline">\(~N(0,1)\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="#cb223-1" aria-hidden="true"></a>x =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span></span>
+<span id="cb223-2"><a href="#cb223-2" aria-hidden="true"></a>y =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb223-3"><a href="#cb223-3" aria-hidden="true"></a></span>
+<span id="cb223-4"><a href="#cb223-4" aria-hidden="true"></a><span class="kw">plot</span>(<span class="dt">x =</span> x,<span class="dt">y =</span>y , <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-1_files/figure-slidy/unnamed-chunk-40-1.png" width="768" /></p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="#cb224-1" aria-hidden="true"></a><span class="kw">hist</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>))</span></code></pre></div>
+<p><img src="lecture-1_files/figure-slidy/unnamed-chunk-40-2.png" width="768" /></p>
+</div>
+<div id="пример-визуализации-финансовых-данных" class="slide section level2">
+<h1>Пример визуализации финансовых данных</h1>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="#cb225-1" aria-hidden="true"></a><span class="kw">library</span>(quantmod)</span></code></pre></div>
+<pre><code>## Loading required package: TTR</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<pre><code>## Version 0.4-0 included new data defaults. See ?getSymbols.</code></pre>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="#cb229-1" aria-hidden="true"></a>AAPL =<span class="st"> </span><span class="kw">getSymbols</span>(<span class="st">&quot;AAPL&quot;</span>, <span class="dt">auto.assign =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<pre><code>## &#39;getSymbols&#39; currently uses auto.assign=TRUE by default, but will
+## use auto.assign=FALSE in 0.5-0. You will still be able to use
+## &#39;loadSymbols&#39; to automatically load data. getOption(&quot;getSymbols.env&quot;)
+## and getOption(&quot;getSymbols.auto.assign&quot;) will still be checked for
+## alternate defaults.
+## 
+## This message is shown once per session and may be disabled by setting 
+## options(&quot;getSymbols.warning4.0&quot;=FALSE). See ?getSymbols for details.</code></pre>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="#cb231-1" aria-hidden="true"></a><span class="kw">chartSeries</span>(AAPL, <span class="dt">theme =</span> <span class="st">&#39;white&#39;</span>) </span></code></pre></div>
+<p><img src="lecture-1_files/figure-slidy/unnamed-chunk-41-1.png" width="768" /></p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="#cb232-1" aria-hidden="true"></a><span class="kw">chartSeries</span>(AAPL[<span class="st">&#39;2017::&#39;</span>], <span class="dt">theme =</span> <span class="st">&#39;white&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-1_files/figure-slidy/unnamed-chunk-41-2.png" width="768" /></p>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="#cb233-1" aria-hidden="true"></a><span class="kw">plot</span>(<span class="kw">diff</span>(<span class="kw">log</span>(<span class="kw">Cl</span>(AAPL))), <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">main =</span> <span class="st">&#39;AAPL log returns&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-1_files/figure-slidy/unnamed-chunk-41-3.png" width="768" /></p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+**/__pycache__
+**/.ipynb_checkpoints
+*.egg-info/
+.vscode/
+*.pkl
+*.h5
+
+# Data
+ojdata/*
+*.Rdata
+*.Rproj
+*.Rhistory
+
+# Pytests
+.pytest_cache/
+
+# File for model deployment
+score.py
+
+# Environments
+myenv.yml
+
+# Logs
+logs/
+*.log
+
+books/
+labs/
+org/
+R/
+forecasting/
+labs_python
+leveraged/
+pdf/
+.Rproj.user/
