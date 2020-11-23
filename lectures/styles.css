@@ -50,5 +50,7 @@ slides > slide:not(.nobackground):before {
   height: 50px;
   background-size: 30px 30px;
   background-position: 0px 30px;
-
 }
+
+a:link { color: #539fde; } /* CSS link color (red) */
+
