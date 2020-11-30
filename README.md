@@ -9,7 +9,7 @@
 
 ## Список лекций
 
-0. [Вводная лекция](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-0.html)
-1. Введение в R.  
+1. [Вводная лекция](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-0.html)
+2. [Введение в R](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-1.html#(1))  
 
 
