@@ -160,7 +160,7 @@ p
 + Войдите в RStudio Cloud, чтобы начать самостоятельную работу. 
 
 
-Изучите [cheat sheet]([https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf) по работе в Rstudio
+Изучите [cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf) по работе в Rstudio
 
 ## Команды в R
 
