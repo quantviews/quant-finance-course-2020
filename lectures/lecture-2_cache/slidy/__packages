@@ -1,0 +1,9 @@
+base
+RColorBrewer
+knitr
+forecast
+zoo
+xts
+TTR
+quantmod
+tseries
