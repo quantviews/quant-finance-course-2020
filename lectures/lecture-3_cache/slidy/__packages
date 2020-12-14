@@ -1,0 +1,10 @@
+base
+RColorBrewer
+knitr
+data.table
+QuantTools
+forecast
+zoo
+xts
+TTR
+quantmod

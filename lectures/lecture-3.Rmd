@@ -1,0 +1,649 @@
+---
+title: 'Линейные модели финансовых серий (MA, ARMA и ARIMA) <br> "Количественные финансы" '
+author: "Салихов Марсель (marcel.salikhov@gmail.com)"
+date: "`r Sys.Date()`"
+output:
+  slidy_presentation:
+    css: styles.css
+    footer: НИУ ВШЭ. Салихов Марсель (marcel.salikhov@gmail.com)
+    lib_dir: libs
+    self_contained: no
+    
+---
+
+## Цели лекции 
+
++ понять основные принципы moving average (MA) моделей
++ научиться симулировать MA-модели
++ научиться оценивать MA-модели на финансовых данных в R
++ понять принципы применения критериев AIC и BIC для выбора подходящей модели 
++ понять, как строятся ARMA модели   
++ научиться строить прогнозы для ARMA моделей
+
+
+```{r setup, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+
+library("RColorBrewer")    # brewer.pal
+library("knitr")           # opts_chunk
+library(QuantTools)
+library(forecast)
+library(xts)
+
+
+# color palette
+palette(brewer.pal(6, "Set1"))
+
+opts_chunk$set(fig.width=12, fig.height=7, fig.align="center", echo=FALSE, tidy=FALSE)
+opts_chunk$set(cache=TRUE, fig.align="center", comment=NA, echo=TRUE, tidy=FALSE)
+
+# преобразовать объект xts в dataframe с сохранением индекса даты
+XtstoDf <- function(ts, ...){ 
+  df <- as.data.frame(ts)
+  df$date <- time(ts)
+  return(df)
+}
+# encapsulate the plotting commands into a function so that we don't have to repeat ourselves
+fancy.plot <- function(x, y, hguide=0, vguide=0, type = "p", col = "black", pch = 1, cex = 1, ...) {
+    # set up plot region
+    plot(x, y, type="n", axes=FALSE, ...)
+    
+    # add axes
+    Axis(x, side=1, lwd=0, lwd.ticks=1, labels=TRUE)
+    Axis(y, side=2, lwd=0, lwd.ticks=1, labels=TRUE)
+    Axis(x, side=3, lwd=0, lwd.ticks=1, labels=FALSE)
+    Axis(y, side=4, lwd=0, lwd.ticks=1, labels=FALSE)
+    
+    # add horizontal guide lines
+    usr <- par("usr")
+    if (hguide > 0) {
+        abline(h=seq(usr[3], usr[4], length.out=hguide+2)[-c(1,hguide+2)], col="gray")
+    }
+    if (vguide > 0) {
+        abline(v=seq(usr[1], usr[2], length.out=vguide+2)[-c(1,vguide+2)], col="gray")
+    }
+
+    # add the data
+    if (type == "l") {
+        lines(x, y, col=col)
+    } else if (type == "p") {
+        points(x, y, cex=cex, pch=pch, col=col)
+    }
+    
+    # add frame
+    box()
+}
+
+# вспомогательная функция - преобразовать объект data.table в xts  с сохранением индекса даты
+quant_tools_to_xts <- function(df, ...){ 
+  df <- as.data.frame(df)
+  ts = xts(df[,-1], order.by = df[,1])
+  return(ts)
+}
+
+
+#load('../.RData')
+
+MICEX <- get_finam_data('MICEX', from = '2010-01-01', to = Sys.Date()) # индекс ММВБ 
+MICEX <- quant_tools_to_xts(MICEX)
+# пакет QuantTools возвращает данные в формате data.table/data.frame, а не хts
+
+
+```
+
+## Moving average 
+
++ На прошлой лекции мы рассмотрели авторегрессионные (AR) модели. В конечном счете мы пришли к тому, что AR-модели для настоящих финансовых данных требуют слишком большого количества параметров для оценки и приводят к "подгонке" (overfitting).
++ MA-модели *схожи* с AR-моделями, однако в отличие от них модель представляет собой не линейную комбинацию прошлых значений, а линейную комбинацию прошлых компонент белого шума. 
++ МA-модель "видит" случайные шоки белого шума непосредственно для каждого текущего значения серии. AR-модель же "видит" шоки косвенным образом, через регрессирование к своим предыдущим значениям. 
++ Однако MA-модель порядка $q$ "видит"" последние q шоков, в то время как AR(p) модель будет учитывать все предыдущие шоки с последовательным убыванием. 
+
+
+
+## Пример с круассанами
+
+У вас небольшой бизнес - вы открыли кафейне на вынос напротив здания ВШЭ. Каждый день вам необходимо сделать заказ в пекарне, которая привезет вас с утра круассан на следующий день ($t+1$).
+
+
+<div align="center">
+  <img src="fig/круассан.jpg" width="626" height="414" />
+</div>
+
+Какой подход вы можете использовать? 
+
+К примеру, вы можете использовать следующий подход. Базово вы заказываете 20 круассанов, а также учитываете информацию о том, сколько у вас осталось или не хватило круассанов в предыдущий день. 
+
+Пример в Excel. 
+
+
+## Определение MA-модели 
+
+Если серия временного ряда ${x_t}$ является моделью скользящего среднего порядка $q$ (MA(q)), то это означает, что 
+
+$$ x_t = \beta_0 + \beta_1 \epsilon_{t-1} + \ldots + \beta_q \epsilon_{t-q} + \epsilon_t $$
+где ${w_t}$ -- это белый шум с $E(w_t)=0$ и дисперсией $\sigma^2$.
+
++ MA-модель всегда стационарна 
++ В MA-модель можно включать константу
++ Обычно модели MA оценивают методом максимального правдоподобия (или другими численными методами). Аналитическая оценка затруднена. 
+
+
+
+## MA(1) модель 
+
+Попробуем симулировать MA(1) c параметром $\beta = 0.6$. То есть мы симулируем модель вида:
+
+$$ x_t  = w_t + 0.6 w_{t-1} $$
+
+
+
+```{r}
+ set.seed(123)
+ x <- w <- rnorm(100)
+for (t in 2:100) x[t] <- w[t] + 0.6*w[t-1]
+layout(1:2)
+plot(x, type="l")
+acf(x)
+```
+
++ Для MA-модели все автокорреляции с лагом $k>q$ должны быть равны 0.  
+
+
+## Оценка симулированной MA(1)-модели 
+
+Мы будем использовать функцию `Arima` для оценки MA-моделей. 
+
+```{r}
+library(forecast)
+x.ma <- forecast::Arima(x, order=c(0, 0, 1))
+x.ma
+#доверительный интерваля для беты
+confint(x.ma)
+```
+
++ Коэффициенты отличаются значимым образом от 0. 
++ Доверительные интервалы включат "настоящие" значения коэффициентов
+
+## МA(1)-модель с коэффициентом -0.6
+
+```{r}
+set.seed(123)
+x <- w <- rnorm(100)
+for (t in 2:100) x[t] <- w[t] - 0.6*w[t-1]
+layout(1:2)
+plot(x, type="l")
+acf(x)
+```
+
+оценка модели 
+
+
+```{r}
+x.ma <- arima(x, order=c(0, 0, 1))
+x.ma
+x.ma$coef[1]+c(-1.96, 1.96)* 0.0788  #доверительный интерваля для беты
+```
+
+## MA(2)-модель 
+
+симулируем модель: 
+
+```{r}
+set.seed(123)
+x <- w <- rnorm(1000)
+for (t in 4:1000) x[t] <- w[t] + 0.6*w[t-1] + 0.3*w[t-2] 
+layout(1:2)
+plot(x, type="l")
+acf(x)
+```
+
+
+оценим модель 
+
+```{r}
+x.ma <- arima(x, order=c(0, 0, 2))
+x.ma
+confint(x.ma)
+```
+
+
+## ACF для MA(1) и MA(2)
+
+
+```{r}
+ma1 <- arima.sim(n=1000, model=list(ma=c(0.5)))
+ma2 <- arima.sim(n=1000, model=list(ma=c(0.5, -0.3)))
+par(mfrow=c(1,2))
+Acf(ma1, na.action = na.omit)
+Acf(ma2, na.action = na.omit)
+```
+
+## PACF для MA(1) и MA(2)
+
+```{r}
+par(mfrow=c(1,2))
+Pacf(ma1)
+Pacf(ma2)
+```
+
+## Индекс ММВБ
+
+```{r, cache=FALSE, warning=FALSE, message=FALSE}
+library(quantmod)
+#MICEX <- rusquant::getSymbols.Finam('MICEX',from = "2001-01-01") # ммвб
+chartSeries(MICEX, theme = 'white')
+
+
+```
+
+в логарифмах
+
+```{r, cache=FALSE}
+log.MICEX <- log(MICEX$close)
+MICEX_log <- log.MICEX
+plot(log.MICEX)
+
+```
+
+
+```{r, cache=FALSE}
+Acf(log.MICEX)
+Pacf(log.MICEX)
+
+```
+
+для лог-доходностей
+
+```{r, cache=FALSE}
+
+diff.log.MICEX <- c(NA, diff(log.MICEX))
+plot(diff.log.MICEX, type ='l', col = 2)
+```
+
+
+```{r}
+Acf(diff.log.MICEX)
+Pacf(diff.log.MICEX)
+
+```
+
+
+## MA(1)-модель для индекса ММВБ
+
+```{r}
+micex.ma <- Arima(diff.log.MICEX, order=c(0, 0, 1))
+micex.ma
+Acf(micex.ma$res[-(1:2)])
+
+```
+
+## Остатки MA(1) для индекса ММВБ
+
++ Остатки MA(1)-модели не являются белым шумом. В остатках сохраняется значимая автокорреляция на лагах 13,20,26,34.
+
+Построим график остатков: 
+
+```{r}
+plot(micex.ma$residuals)
+```
+
+
+## MA(2) для доходностей индекса ММВБ
+
+попробуем оценить MA(2)-модель 
+
+```{r}
+micex.ma <- arima(diff.log.MICEX, order=c(0, 0, 2))
+micex.ma
+Acf(micex.ma$res[-(1:2)])
+```
+
++ MA(2)-модель позволила "убрать" автокорреляцию на лаге 2, но автокорреляция на других лагах сохранилась. 
+
+## MA(3)-модель для индекса ММВБ
+
+попробуем оценить MA(3)-модель 
+
+```{r}
+micex.ma <- arima(diff.log.MICEX, order=c(0, 0, 3))
+micex.ma
+Acf(micex.ma$res[-(1:2)])
+```
+
++ Построение MA(3)-модели не позволило улучшить автокоррелограмму. 
+
+## Выводы по AR и MA моделям
+
++ Оба типа моделей - AR и MA - позволяют частично объяснять автокорреляцию в сериях лог-доходностей акций. 
++ Однако кластеризация волатильности и эффекты "длинной памяти" все же остаются в остатках. 
++ Может ли объединение двух подходов улучшить ситуацию?
+
+## Информационные критерии 
+
++ Информационные критерии -- это инструменты, которые помогают нам выбирать "лучшие" модели. Информационный критерий оценивает "качество" модели по сравнению с альтернативными спецификациями модели. 
++ Чаще всего используются два критерия - критерий Акаике (AIC) и Байесовский информационный критерий (BIC).
++ Общая идея всех информационных критериев заключается в оценке баланса между прогностический точностью модели и ее сложностью. 
++ Мы хотим строить минимально сложные модели ("бритва Оккама"), но которые при этом имели максимальную объясняющую способность
+
+## Информационный критерий Акаике 
+
+Если мы используем функцию правдоподобия (likelyhood function) для оценки модели c $k$ параметрами и значение $L$ максимизирует функцию правдоподобия, то AIC рассчитывается как: 
+
+$$ AIC = -2log(L) + 2k $$
+
++ Мы предпочитаем модели, которые имеют **минимальное** значение AIC. 
++ Как видно из формулы, AIC увеличивается по мере роста количества параметров (k) и снижается по мере роста log-likelyhood (L), то есть точности оценки
++ Абсолютные значения AIC не имеют значения, мы сравниваем только значения AIC для различных моделей, которые построены на одних данных. 
++ Значения информационных критериев для разных серий не сравнимы между собой! 
+
+## Байесовский информационный критерий (BIC)
+
+BIC рассчитывается как: 
+
+$$ BIC = -2 \cdot log(L) + k \cdot log(n) $$
+где $n$ - количество наблюдений в рассматриваемой серии.
+
++ AIC и BIC могут указывать на разные модели как "лучшие" и противоречить друг другу
++ Можно использовать AIC как более предпочтительный критерий
+
+## ARMA-модели
+
++ AR-модели учитывают прошлое поведение (лаги) в качестве входных параметров. С сутевой точки зрения это позволяет учитывать некоторые особенности поведения участников финансового рынка рынка, такое как mean reversion (возвращение к среднему) или momentum (инерционность финансовых рынков -- после роста сохраняется тенденция к росту, и -- наоборот). 
++ MA-модели используются для оценки "информационных шоков" в серии. К примеру, такими шоками могут быть неожиданные события или поступление новой информации (выход квартальной финансовой отчетности) и так далее. То есть, MA-модель позволяет оценивать единовременную реакцию серии на шоки.  
++ ARMA-модели учитывают оба этих аспекта при моделировании финансовых серий. 
++ ARMA-модели в принципе не учитывают эффекты "кластеризации волатильности". Это не условные гетероскедастичные модели. Мы считаем, что дисперсия является **постоянной** в ARMA-моделях.  
+
+## Определение ARMA-модели 
+
+Если серия временного ряда ${x_t}$ является моделью ARMA(p,q), то
+
+$$ x_t = \alpha_1 x_{t-1} + \alpha_2 x_{t-2} + \ldots + w_t + \beta_1 w_{t-1} + \beta_2 w_{t-2} + \ldots + \beta_q w_{t-q} $$ 
+
++ Основное преимущество ARMA-модели по сравнению c AR или MA, заключается в том, что как правило она требует меньше параметров для оценки.
++ Вспомните, что AR-модели на настоящих данных требовали оценки коэффициентов для 20-30 лагов. 
+
+
+## Симулирование ARMA(1,1)
+
+Простейшая ARMA-модель -- это ARMA(1,1). Модель имеет вид: 
+
+$$x_t + \alpha x_{t-1} + w_t + \beta w_{t-1}  $$
+
+```{r}
+set.seed(123)
+x <- arima.sim(n=1000, model=list(ar=0.5, ma=-0.5))
+plot(x)
+Acf(x)
+```
+
++ Модель не имеет значимых автокорреляция на всех лагах 
+
+оценим симулированную модель: 
+
+```{r}
+arima(x, order=c(1, 0, 1))
+```
+
+## Симулирование ARMA(2,2)
+
+```{r}
+set.seed(123)
+x <- arima.sim(n=1000, model=list(ar=c(0.5, -0.25), ma=c(0.5, -0.3)))
+plot(x)
+Acf(x)
+```
+
+оценим модель 
+
+```{r}
+Arima(x, order=c(2, 0, 2))
+confint(arima(x, order=c(2, 0, 2)))
+```
+
++ Доверительные интервалы содержат настоящие значения параметров ar=c(0.5, -0.25), ma=c(0.5, -0.3), но являются достаточно широкими 
+
+## Drift (смещение)
+
+```{r}
+n   <- 150
+eps <- rnorm(n)
+x0  <- rep(0, n)
+for(i in 2:n){
+  x0[i] <- x0[i-1] + eps[i]
+}
+plot(ts(x0), main = 'Случайное блуждание')
+```
+
+
+случайное блуждание со смещением 
+
+```{r}
+drift <- 0.5
+x1    <- rep(0, n)
+for(i in 2:n){
+  x1[i] <- drift + x1[i-1] + eps[i]
+}
+plot(ts(x1), main = 'Cлучайное блуждание со смещением')
+```
+
+случайное блуждение с линейным трендом 
+
+```{r}
+trend <- seq_len(n)*0.05
+x2    <- rep(0, n)
+for(i in 2:n){
+  x2[i] <- trend[i] + x2[i-1] + eps[i]
+}
+plot(ts(x2), main = 'Линейный тренд и случайное блуждание')
+```
+
+мы обычно переходили от модели в уровнях (лог-цены) к разностям (лог-доходности) для того, чтобы обеспечить стационарность данных.
+
+Модель случайного блуждания "в уровнях" по сути представляет собой AR(1) модель с коэффициентом 1. Уравнение можно записать по другому
+
+$$x_t  - x_{t-1} = \mu $$
+или
+
+$$x_t = x_{t-1} + \mu $$
+где $\mu$ - это смещение (drift). При расчете разностей модели будут идентичны. 
+
+## Построение ARIMA-моделей 
+
++ Серия ${x_t}$ является $ARIMA(p,d,q)$ моделью, если $\Delta^d x_t$ является моделью $ARMA(p,q)$. 
++ К примеру, если лог-доходности моделируются ARMA(p,q), то лог-цены будут ARIMA(p,1,q). 
++ Random walk является моделью ARIMA(0,1,0), а белый шум -- моделью ARIMA(0,0,0). 
+
+
+
+## ARIMA модели для индекса ММВБ
+
+
+Построим несколько моделей для логарифмов индекса ММВБ
+
+```{r,cache=FALSE }
+# без константы (сводобного члена)
+fit.00 <- Arima(MICEX_log, c(0, 1, 0), include.drift=FALSE)
+fit.01 <- Arima(MICEX_log, c(0, 1, 1), include.drift=FALSE)
+fit.02 <- Arima(MICEX_log, c(0, 1, 2), include.drift=FALSE)
+fit.10 <- Arima(MICEX_log, c(1, 1, 0), include.drift=FALSE)
+fit.11 <- Arima(MICEX_log, c(1, 1, 1), include.drift=FALSE)
+fit.12 <- Arima(MICEX_log, c(1, 1, 2), include.drift=FALSE)
+fit.20 <- Arima(MICEX_log, c(2, 1, 0), include.drift=FALSE)
+fit.21 <- Arima(MICEX_log, c(2, 1, 1), include.drift=FALSE)
+fit.22 <- Arima(MICEX_log, c(2, 1, 2), include.drift=FALSE)
+
+# с константой 
+fit.00c <- Arima(MICEX_log, c(0, 1, 0), include.drift=TRUE)
+fit.01c <- Arima(MICEX_log, c(0, 1, 1), include.drift=TRUE)
+fit.02c <- Arima(MICEX_log, c(0, 1, 2), include.drift=TRUE)
+fit.10c <- Arima(MICEX_log, c(1, 1, 0), include.drift=TRUE)
+fit.11c <- Arima(MICEX_log, c(1, 1, 1), include.drift=TRUE)
+fit.12c <- Arima(MICEX_log, c(1, 1, 2), include.drift=TRUE)
+fit.20c <- Arima(MICEX_log, c(2, 1, 0), include.drift=TRUE)
+fit.21c <- Arima(MICEX_log, c(2, 1, 1), include.drift=TRUE)
+fit.22c <- Arima(MICEX_log, c(2, 1, 2), include.drift=TRUE)
+
+```
+
+
+```{r}
+# аггрегируем результаты
+models <- data.frame(p = rep(c(0, 0, 0, 1, 1, 1, 2, 2, 2), 2),
+                     d = rep(1, 18),
+                     q = rep(c(0, 1, 2), 6),
+                     include.drift = c(rep(FALSE, 9), rep(TRUE, 9)),
+                     loglik = c(fit.00$loglik, fit.01$loglik, fit.02$loglik,
+                                fit.10$loglik, fit.11$loglik, fit.12$loglik,
+                                fit.20$loglik, fit.21$loglik, fit.22$loglik,
+                                fit.00c$loglik, fit.01c$loglik, fit.02c$loglik,
+                                fit.10c$loglik, fit.11c$loglik, fit.12c$loglik,
+                                fit.20c$loglik, fit.21c$loglik, fit.22c$loglik),
+                     aicc = c(fit.00$aicc, fit.01$aicc, fit.02$aicc,
+                                fit.10$aicc, fit.11$aicc, fit.12$aicc,
+                                fit.20$aicc, fit.21$aicc, fit.22$aicc,
+                                fit.00c$aicc, fit.01c$aicc, fit.02c$aicc,
+                                fit.10c$aicc, fit.11c$aicc, fit.12c$aicc,
+                                fit.20c$aicc, fit.21c$aicc, fit.22c$aicc),
+                      bic = c(fit.00$bic, fit.01$bic, fit.02$bic,
+                                fit.10$bic, fit.11$bic, fit.12$bic,
+                                fit.20$bic, fit.21$bic, fit.22$bic,
+                                fit.00c$bic, fit.01c$bic, fit.02c$bic,
+                                fit.10c$bic, fit.11c$bic, fit.12c$bic,
+                                fit.20c$bic, fit.21c$bic, fit.22c$bic)
+                     )
+print(models, digits=6)
+```
+
+## Лучшая модель по AIC
+
+выберем "лучшую" модель по критерию Акаике
+
+```{r}
+library(ggplot2)
+models$descr <- paste(models$p, models$q, models$include.drift)
+p <- ggplot(models, aes(descr,aicc))
+p + geom_point()+coord_flip()+theme_minimal()
+models[which(models$aicc == min(models$aicc)),]
+```
+
+какая модель минимизирует AIC?
+
+## Оценка "лучшей" модели (AIC)
+
+выбрали "вторую" лучшую модель по критерию AIC
+
+```{r}
+fit.best <- Arima(MICEX_log, c(0, 1, 1), include.drift= FALSE)
+print(fit.best)
+
+
+```
+
+## Остатки модели ARMA
+
+```{r}
+resid <- residuals(fit.best)
+plot(resid, type="l", col=2)
+Acf(resid)
+Pacf(resid)
+```
+
++ даже в "лучшей" модели ARMA сохранилась автокорреляция в остатках
+
+## Cтатистика Ljung-Box
+
++ Статистика Ljung-Box является классическим тестом на гипотезу о том, что набор автокорреляций в модели совместно отличается от 0. 
++ Тест не оценивает каждый индивидуальный лаг на отличие от 0, а оценивает совокупность лагов одновременно. 
++ $H0$: серия на каждом лаге является i.i.d., то есть корреляции между между лагами равны нулю
++ $H1$: серия на каждом лаге не является i.i.d., то есть в ней сохраняется автокорреляция 
+
+Формально тест рассчитывает следующую статистику: 
+
+$$ Q = n(n+2) \sum_{k=1}^{h} \frac{\hat{\rho}^2}{n-k} $$
+
+где $n$ -- количество наблюдений, $\hat{\rho}^2$ -- выборочная автокорреляция на лаге $k$, $h$ -- тестируемый лаг.
+
++ Мы отвергаем нулевую гипотезу $H0$, если $Q > \chi^2_{a,h}$ (для распределения хи-квадрат с $h$ степенями свободы). 
++ Мы можем не вдаваться в подробности оценки, а использовать функцию `Box.test` для проведения теста: 
+
+
+```{r}
+Box.test(resid, lag=10, type = "Ljung-Box", fitdf=3)
+```
+
+
++ если мы используем тест на остатках модели, то необходимо скорректировать количество степеней свободы (`fitdf`)
++ fitdf = p +q и тестируемые лаги (`lag`) должны быть больше `fitdf`
++ Тест указывает на сохранение автокорреляции в остатках модели 
+
+## Построение прогноза 
+
+Для построения прогноза необходимо использовать функцию `forecast` из одноименного пакета: 
+
+```{r}
+plot(forecast(fit.best, h=100, level=95, fan = TRUE), col=2)
+```
+
++ h -- определяет длину прогноза
++ level -- определяет доверительные интервалы для интервалов предсказания (prediction interval)
+
+Посмотрим "поближе" на прогноз, который сгенерировала модель ARMA(2,1).
+
+```{r}
+fcst <-  forecast(fit.best, h = 20)
+plot(fcst$mean)
+
+```
+
+
+## Построение прогноза с помощью auto.arima
+
++ Пакет forecast позволяет автоматически находить лучшие спецификации ARMA моделей 
+
+```{r}
+fit1 <- auto.arima(MICEX_log, ic = 'aicc')
+fit1
+fcst <- forecast(fit1, h=100, level=95, fan = TRUE)
+plot(forecast(fit1, h=100, level=95, fan = TRUE), col=2)
+plot(fcst$mean[1:50], type  = 'l')
+
+```
+
++ Мы "нашли" вручную модель ARMA(2,1) или ARMA(2,0), в то время как 'auto.arima` предлагает нам модель ARMA(4,0). 
+
+
+## auto.arima из пакета forecast
+
+мы также можем находить модели и строить прогнозы для нестационарных серий c помощью `auto.arima`
+
+```{r}
+fit2 <- auto.arima(MICEX_log, ic = 'aicc')
+fit2
+plot(forecast(fit2, h=100, level=95, fan = TRUE), col=2)
+
+fit2 <- auto.arima(MICEX_log,
+                   ic = 'aicc', 
+                   allowdrift = FALSE,
+                   allowmean = TRUE, 
+                   lambda=NULL)
+plot(forecast(fit2, h=100, level=95, fan = TRUE), col=2)
+```
+
+
+
+## Выводы
+
++ Мы используем PACF для определения ориентировочного порядка AR-моделей (последний значимый лаг на PACF определяет порядок модели - $p$)
++ Мы используем ACF для определения порядка MA-моделей (последний значимый лаг на АСА определяет порядок модели - $q$). 
++ Информационные критерии (AIC, BIC) часто используются для выбора оптимальной модели. Эти критерии "штрафуют" модели за сложность (количество оцениваемых параметров)
++ ARMA модели позволяют использовать меньше параметров чем AR или MA по отдельности 
++ Все ARMA модели не позволяют моделировать меняющуюся во времени волатильность
++ Прогнозы на основе ARMA имеет смысл строить только на несколько периодов вперед
+
+
+## Использованные источники: 
+
+1. "An Introduction to Analysis of Financial Data with R" (Ruey S. Tsay)
+2. "Statistics and Data Analysis for Financial Engineering" (David Ruppert & David Matteson)
+3. Analyzing Financial Data and Implementing Financial Models Using R (Clifford Ang)
+4. Forecasting Financial Time Series (Patrick Perry)
+

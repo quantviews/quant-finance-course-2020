@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Салихов Марсель (marcel.salikhov@gmail.com)" />
+  <meta name="date" content="2020-12-14" />
+  <meta name="copyright" content="НИУ ВШЭ. Салихов Марсель (marcel.salikhov@gmail.com)"/>
+  <title>Линейные модели финансовых серий (MA, ARMA и ARIMA)   “Количественные финансы”</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode { white-space: pre; position: relative; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    code.sourceCode { white-space: pre-wrap; }
+    code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="libs/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="libs/slidy-2/scripts/slidy.js"></script>
+  <script src="libs/slidy_shiny-1/slidy_shiny.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="styles.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Линейные модели финансовых серий (MA, ARMA и ARIMA) <br> “Количественные финансы”</h1>
+  <p class="author">
+Салихов Марсель (<a href="mailto:marcel.salikhov@gmail.com" class="email">marcel.salikhov@gmail.com</a>)
+  </p>
+  <p class="date">2020-12-14</p>
+</div>
+<div id="цели-лекции" class="slide section level2">
+<h1>Цели лекции</h1>
+<ul>
+<li>понять основные принципы moving average (MA) моделей</li>
+<li>научиться симулировать MA-модели</li>
+<li>научиться оценивать MA-модели на финансовых данных в R</li>
+<li>понять принципы применения критериев AIC и BIC для выбора подходящей модели</li>
+<li>понять, как строятся ARMA модели<br />
+</li>
+<li>научиться строить прогнозы для ARMA моделей</li>
+</ul>
+</div>
+<div id="moving-average" class="slide section level2">
+<h1>Moving average</h1>
+<ul>
+<li>На прошлой лекции мы рассмотрели авторегрессионные (AR) модели. В конечном счете мы пришли к тому, что AR-модели для настоящих финансовых данных требуют слишком большого количества параметров для оценки и приводят к “подгонке” (overfitting).</li>
+<li>MA-модели <em>схожи</em> с AR-моделями, однако в отличие от них модель представляет собой не линейную комбинацию прошлых значений, а линейную комбинацию прошлых компонент белого шума.</li>
+<li>МA-модель “видит” случайные шоки белого шума непосредственно для каждого текущего значения серии. AR-модель же “видит” шоки косвенным образом, через регрессирование к своим предыдущим значениям.</li>
+<li>Однако MA-модель порядка <span class="math inline">\(q\)</span> “видит”" последние q шоков, в то время как AR(p) модель будет учитывать все предыдущие шоки с последовательным убыванием.</li>
+</ul>
+</div>
+<div id="пример-с-круассанами" class="slide section level2">
+<h1>Пример с круассанами</h1>
+<p>У вас небольшой бизнес - вы открыли кафейне на вынос напротив здания ВШЭ. Каждый день вам необходимо сделать заказ в пекарне, которая привезет вас с утра круассан на следующий день (<span class="math inline">\(t+1\)</span>).</p>
+<div align="center">
+<p><img src="fig/круассан.jpg" width="626" height="414" /></p>
+</div>
+<p>Какой подход вы можете использовать?</p>
+<p>К примеру, вы можете использовать следующий подход. Базово вы заказываете 20 круассанов, а также учитываете информацию о том, сколько у вас осталось или не хватило круассанов в предыдущий день.</p>
+<p>Пример в Excel.</p>
+</div>
+<div id="определение-ma-модели" class="slide section level2">
+<h1>Определение MA-модели</h1>
+<p>Если серия временного ряда <span class="math inline">\({x_t}\)</span> является моделью скользящего среднего порядка <span class="math inline">\(q\)</span> (MA(q)), то это означает, что</p>
+<p><span class="math display">\[ x_t = \beta_0 + \beta_1 \epsilon_{t-1} + \ldots + \beta_q \epsilon_{t-q} + \epsilon_t \]</span> где <span class="math inline">\({w_t}\)</span> – это белый шум с <span class="math inline">\(E(w_t)=0\)</span> и дисперсией <span class="math inline">\(\sigma^2\)</span>.</p>
+<ul>
+<li>MA-модель всегда стационарна</li>
+<li>В MA-модель можно включать константу</li>
+<li>Обычно модели MA оценивают методом максимального правдоподобия (или другими численными методами). Аналитическая оценка затруднена.</li>
+</ul>
+</div>
+<div id="ma1-модель" class="slide section level2">
+<h1>MA(1) модель</h1>
+<p>Попробуем симулировать MA(1) c параметром <span class="math inline">\(\beta = 0.6\)</span>. То есть мы симулируем модель вида:</p>
+<p><span class="math display">\[ x_t  = w_t + 0.6 w_{t-1} \]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> <span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a> x &lt;-<span class="st"> </span>w &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">100</span>) x[t] &lt;-<span class="st"> </span>w[t] <span class="op">+</span><span class="st"> </span><span class="fl">0.6</span><span class="op">*</span>w[t<span class="dv">-1</span>]</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">layout</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">plot</span>(x, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">acf</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-1-1.png" width="768" /></p>
+<ul>
+<li>Для MA-модели все автокорреляции с лагом <span class="math inline">\(k&gt;q\)</span> должны быть равны 0.</li>
+</ul>
+</div>
+<div id="оценка-симулированной-ma1-модели" class="slide section level2">
+<h1>Оценка симулированной MA(1)-модели</h1>
+<p>Мы будем использовать функцию <code>Arima</code> для оценки MA-моделей.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Warning: package &#39;forecast&#39; was built under R version 4.0.3</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>x.ma &lt;-<span class="st"> </span>forecast<span class="op">::</span><span class="kw">Arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb5-2"><a href="#cb5-2"></a>x.ma</span></code></pre></div>
+<pre><code>## Series: x 
+## ARIMA(0,0,1) with non-zero mean 
+## 
+## Coefficients:
+##          ma1    mean
+##       0.7240  0.1430
+## s.e.  0.0898  0.1546
+## 
+## sigma^2 estimated as 0.8271:  log likelihood=-131.76
+## AIC=269.53   AICc=269.78   BIC=277.34</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">#доверительный интерваля для беты</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">confint</span>(x.ma)</span></code></pre></div>
+<pre><code>##                2.5 %    97.5 %
+## ma1        0.5481109 0.8999776
+## intercept -0.1600075 0.4459076</code></pre>
+<ul>
+<li>Коэффициенты отличаются значимым образом от 0.</li>
+<li>Доверительные интервалы включат “настоящие” значения коэффициентов</li>
+</ul>
+</div>
+<div id="мa1-модель-с-коэффициентом--0.6" class="slide section level2">
+<h1>МA(1)-модель с коэффициентом -0.6</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>x &lt;-<span class="st"> </span>w &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">100</span>) x[t] &lt;-<span class="st"> </span>w[t] <span class="op">-</span><span class="st"> </span><span class="fl">0.6</span><span class="op">*</span>w[t<span class="dv">-1</span>]</span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="kw">layout</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">plot</span>(x, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="kw">acf</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-3-1.png" width="768" /></p>
+<p>оценка модели</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>x.ma &lt;-<span class="st"> </span><span class="kw">arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb10-2"><a href="#cb10-2"></a>x.ma</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(0, 0, 1))
+## 
+## Coefficients:
+##           ma1  intercept
+##       -0.6337     0.0370
+## s.e.   0.0788     0.0338
+## 
+## sigma^2 estimated as 0.8227:  log likelihood = -132.39,  aic = 270.78</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>x.ma<span class="op">$</span>coef[<span class="dv">1</span>]<span class="op">+</span><span class="kw">c</span>(<span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>)<span class="op">*</span><span class="st"> </span><span class="fl">0.0788</span>  <span class="co">#доверительный интерваля для беты</span></span></code></pre></div>
+<pre><code>## [1] -0.7881117 -0.4792157</code></pre>
+</div>
+<div id="ma2-модель" class="slide section level2">
+<h1>MA(2)-модель</h1>
+<p>симулируем модель:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>x &lt;-<span class="st"> </span>w &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">4</span><span class="op">:</span><span class="dv">1000</span>) x[t] &lt;-<span class="st"> </span>w[t] <span class="op">+</span><span class="st"> </span><span class="fl">0.6</span><span class="op">*</span>w[t<span class="dv">-1</span>] <span class="op">+</span><span class="st"> </span><span class="fl">0.3</span><span class="op">*</span>w[t<span class="dv">-2</span>] </span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">layout</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">plot</span>(x, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="kw">acf</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-5-1.png" width="768" /></p>
+<p>оценим модель</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>x.ma &lt;-<span class="st"> </span><span class="kw">arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>))</span>
+<span id="cb15-2"><a href="#cb15-2"></a>x.ma</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(0, 0, 2))
+## 
+## Coefficients:
+##          ma1     ma2  intercept
+##       0.5852  0.2827     0.0307
+## s.e.  0.0311  0.0307     0.0585
+## 
+## sigma^2 estimated as 0.9822:  log likelihood = -1410.14,  aic = 2828.29</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">confint</span>(x.ma)</span></code></pre></div>
+<pre><code>##                 2.5 %    97.5 %
+## ma1        0.52422837 0.6461799
+## ma2        0.22251632 0.3429303
+## intercept -0.08393561 0.1453965</code></pre>
+</div>
+<div id="acf-для-ma1-и-ma2" class="slide section level2">
+<h1>ACF для MA(1) и MA(2)</h1>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>ma1 &lt;-<span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">model=</span><span class="kw">list</span>(<span class="dt">ma=</span><span class="kw">c</span>(<span class="fl">0.5</span>)))</span>
+<span id="cb19-2"><a href="#cb19-2"></a>ma2 &lt;-<span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">model=</span><span class="kw">list</span>(<span class="dt">ma=</span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">-0.3</span>)))</span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="kw">Acf</span>(ma1, <span class="dt">na.action =</span> na.omit)</span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="kw">Acf</span>(ma2, <span class="dt">na.action =</span> na.omit)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-7-1.png" width="768" /></p>
+</div>
+<div id="pacf-для-ma1-и-ma2" class="slide section level2">
+<h1>PACF для MA(1) и MA(2)</h1>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">Pacf</span>(ma1)</span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="kw">Pacf</span>(ma2)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-8-1.png" width="768" /></p>
+</div>
+<div id="индекс-ммвб" class="slide section level2">
+<h1>Индекс ММВБ</h1>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">library</span>(quantmod)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="co">#MICEX &lt;- rusquant::getSymbols.Finam(&#39;MICEX&#39;,from = &quot;2001-01-01&quot;) # ммвб</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">chartSeries</span>(MICEX, <span class="dt">theme =</span> <span class="st">&#39;white&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-9-1.png" width="768" /></p>
+<p>в логарифмах</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>log.MICEX &lt;-<span class="st"> </span><span class="kw">log</span>(MICEX<span class="op">$</span>close)</span>
+<span id="cb22-2"><a href="#cb22-2"></a>MICEX_log &lt;-<span class="st"> </span>log.MICEX</span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">plot</span>(log.MICEX)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-10-1.png" width="768" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">Acf</span>(log.MICEX)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-11-1.png" width="768" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">Pacf</span>(log.MICEX)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-11-2.png" width="768" /></p>
+<p>для лог-доходностей</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>diff.log.MICEX &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="kw">diff</span>(log.MICEX))</span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">plot</span>(diff.log.MICEX, <span class="dt">type =</span><span class="st">&#39;l&#39;</span>, <span class="dt">col =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-12-1.png" width="768" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">Acf</span>(diff.log.MICEX)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-13-1.png" width="768" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">Pacf</span>(diff.log.MICEX)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-13-2.png" width="768" /></p>
+</div>
+<div id="ma1-модель-для-индекса-ммвб" class="slide section level2">
+<h1>MA(1)-модель для индекса ММВБ</h1>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>micex.ma &lt;-<span class="st"> </span><span class="kw">Arima</span>(diff.log.MICEX, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb28-2"><a href="#cb28-2"></a>micex.ma</span></code></pre></div>
+<pre><code>## Series: diff.log.MICEX 
+## ARIMA(0,0,1) with non-zero mean 
+## 
+## Coefficients:
+##          ma1   mean
+##       0.0266  3e-04
+## s.e.  0.0194  2e-04
+## 
+## sigma^2 estimated as 0.0001579:  log likelihood=8126.15
+## AIC=-16246.31   AICc=-16246.3   BIC=-16228.55</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">Acf</span>(micex.ma<span class="op">$</span>res[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-14-1.png" width="768" /></p>
+</div>
+<div id="остатки-ma1-для-индекса-ммвб" class="slide section level2">
+<h1>Остатки MA(1) для индекса ММВБ</h1>
+<ul>
+<li>Остатки MA(1)-модели не являются белым шумом. В остатках сохраняется значимая автокорреляция на лагах 13,20,26,34.</li>
+</ul>
+<p>Построим график остатков:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">plot</span>(micex.ma<span class="op">$</span>residuals)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-15-1.png" width="768" /></p>
+</div>
+<div id="ma2-для-доходностей-индекса-ммвб" class="slide section level2">
+<h1>MA(2) для доходностей индекса ММВБ</h1>
+<p>попробуем оценить MA(2)-модель</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>micex.ma &lt;-<span class="st"> </span><span class="kw">arima</span>(diff.log.MICEX, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>))</span>
+<span id="cb32-2"><a href="#cb32-2"></a>micex.ma</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = diff.log.MICEX, order = c(0, 0, 2))
+## 
+## Coefficients:
+##          ma1      ma2  intercept
+##       0.0264  -0.0165      3e-04
+## s.e.  0.0191   0.0189      2e-04
+## 
+## sigma^2 estimated as 0.0001577:  log likelihood = 8126.54,  aic = -16245.07</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw">Acf</span>(micex.ma<span class="op">$</span>res[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-16-1.png" width="768" /></p>
+<ul>
+<li>MA(2)-модель позволила “убрать” автокорреляцию на лаге 2, но автокорреляция на других лагах сохранилась.</li>
+</ul>
+</div>
+<div id="ma3-модель-для-индекса-ммвб" class="slide section level2">
+<h1>MA(3)-модель для индекса ММВБ</h1>
+<p>попробуем оценить MA(3)-модель</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>micex.ma &lt;-<span class="st"> </span><span class="kw">arima</span>(diff.log.MICEX, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>))</span>
+<span id="cb35-2"><a href="#cb35-2"></a>micex.ma</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = diff.log.MICEX, order = c(0, 0, 3))
+## 
+## Coefficients:
+##          ma1      ma2     ma3  intercept
+##       0.0262  -0.0160  0.0071      3e-04
+## s.e.  0.0191   0.0189  0.0192      2e-04
+## 
+## sigma^2 estimated as 0.0001577:  log likelihood = 8126.6,  aic = -16243.21</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">Acf</span>(micex.ma<span class="op">$</span>res[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-17-1.png" width="768" /></p>
+<ul>
+<li>Построение MA(3)-модели не позволило улучшить автокоррелограмму.</li>
+</ul>
+</div>
+<div id="выводы-по-ar-и-ma-моделям" class="slide section level2">
+<h1>Выводы по AR и MA моделям</h1>
+<ul>
+<li>Оба типа моделей - AR и MA - позволяют частично объяснять автокорреляцию в сериях лог-доходностей акций.</li>
+<li>Однако кластеризация волатильности и эффекты “длинной памяти” все же остаются в остатках.</li>
+<li>Может ли объединение двух подходов улучшить ситуацию?</li>
+</ul>
+</div>
+<div id="информационные-критерии" class="slide section level2">
+<h1>Информационные критерии</h1>
+<ul>
+<li>Информационные критерии – это инструменты, которые помогают нам выбирать “лучшие” модели. Информационный критерий оценивает “качество” модели по сравнению с альтернативными спецификациями модели.</li>
+<li>Чаще всего используются два критерия - критерий Акаике (AIC) и Байесовский информационный критерий (BIC).</li>
+<li>Общая идея всех информационных критериев заключается в оценке баланса между прогностический точностью модели и ее сложностью.</li>
+<li>Мы хотим строить минимально сложные модели (“бритва Оккама”), но которые при этом имели максимальную объясняющую способность</li>
+</ul>
+</div>
+<div id="информационный-критерий-акаике" class="slide section level2">
+<h1>Информационный критерий Акаике</h1>
+<p>Если мы используем функцию правдоподобия (likelyhood function) для оценки модели c <span class="math inline">\(k\)</span> параметрами и значение <span class="math inline">\(L\)</span> максимизирует функцию правдоподобия, то AIC рассчитывается как:</p>
+<p><span class="math display">\[ AIC = -2log(L) + 2k \]</span></p>
+<ul>
+<li>Мы предпочитаем модели, которые имеют <strong>минимальное</strong> значение AIC.</li>
+<li>Как видно из формулы, AIC увеличивается по мере роста количества параметров (k) и снижается по мере роста log-likelyhood (L), то есть точности оценки</li>
+<li>Абсолютные значения AIC не имеют значения, мы сравниваем только значения AIC для различных моделей, которые построены на одних данных.</li>
+<li>Значения информационных критериев для разных серий не сравнимы между собой!</li>
+</ul>
+</div>
+<div id="байесовский-информационный-критерий-bic" class="slide section level2">
+<h1>Байесовский информационный критерий (BIC)</h1>
+<p>BIC рассчитывается как:</p>
+<p><span class="math display">\[ BIC = -2 \cdot log(L) + k \cdot log(n) \]</span> где <span class="math inline">\(n\)</span> - количество наблюдений в рассматриваемой серии.</p>
+<ul>
+<li>AIC и BIC могут указывать на разные модели как “лучшие” и противоречить друг другу</li>
+<li>Можно использовать AIC как более предпочтительный критерий</li>
+</ul>
+</div>
+<div id="arma-модели" class="slide section level2">
+<h1>ARMA-модели</h1>
+<ul>
+<li>AR-модели учитывают прошлое поведение (лаги) в качестве входных параметров. С сутевой точки зрения это позволяет учитывать некоторые особенности поведения участников финансового рынка рынка, такое как mean reversion (возвращение к среднему) или momentum (инерционность финансовых рынков – после роста сохраняется тенденция к росту, и – наоборот).</li>
+<li>MA-модели используются для оценки “информационных шоков” в серии. К примеру, такими шоками могут быть неожиданные события или поступление новой информации (выход квартальной финансовой отчетности) и так далее. То есть, MA-модель позволяет оценивать единовременную реакцию серии на шоки.<br />
+</li>
+<li>ARMA-модели учитывают оба этих аспекта при моделировании финансовых серий.</li>
+<li>ARMA-модели в принципе не учитывают эффекты “кластеризации волатильности”. Это не условные гетероскедастичные модели. Мы считаем, что дисперсия является <strong>постоянной</strong> в ARMA-моделях.</li>
+</ul>
+</div>
+<div id="определение-arma-модели" class="slide section level2">
+<h1>Определение ARMA-модели</h1>
+<p>Если серия временного ряда <span class="math inline">\({x_t}\)</span> является моделью ARMA(p,q), то</p>
+<p><span class="math display">\[ x_t = \alpha_1 x_{t-1} + \alpha_2 x_{t-2} + \ldots + w_t + \beta_1 w_{t-1} + \beta_2 w_{t-2} + \ldots + \beta_q w_{t-q} \]</span></p>
+<ul>
+<li>Основное преимущество ARMA-модели по сравнению c AR или MA, заключается в том, что как правило она требует меньше параметров для оценки.</li>
+<li>Вспомните, что AR-модели на настоящих данных требовали оценки коэффициентов для 20-30 лагов.</li>
+</ul>
+</div>
+<div id="симулирование-arma11" class="slide section level2">
+<h1>Симулирование ARMA(1,1)</h1>
+<p>Простейшая ARMA-модель – это ARMA(1,1). Модель имеет вид:</p>
+<p><span class="math display">\[x_t + \alpha x_{t-1} + w_t + \beta w_{t-1}  \]</span></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb38-2"><a href="#cb38-2"></a>x &lt;-<span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">model=</span><span class="kw">list</span>(<span class="dt">ar=</span><span class="fl">0.5</span>, <span class="dt">ma=</span><span class="op">-</span><span class="fl">0.5</span>))</span>
+<span id="cb38-3"><a href="#cb38-3"></a><span class="kw">plot</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-18-1.png" width="768" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">Acf</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-18-2.png" width="768" /></p>
+<ul>
+<li>Модель не имеет значимых автокорреляция на всех лагах</li>
+</ul>
+<p>оценим симулированную модель:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## Warning in arima(x, order = c(1, 0, 1)): possible convergence problem: optim
+## gave code = 1</code></pre>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 1))
+## 
+## Coefficients:
+##          ar1      ma1  intercept
+##       0.5990  -0.6326     0.0158
+## s.e.  0.3778   0.3660     0.0289
+## 
+## sigma^2 estimated as 0.9951:  log likelihood = -1416.46,  aic = 2840.93</code></pre>
+</div>
+<div id="симулирование-arma22" class="slide section level2">
+<h1>Симулирование ARMA(2,2)</h1>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb43-2"><a href="#cb43-2"></a>x &lt;-<span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n=</span><span class="dv">1000</span>, <span class="dt">model=</span><span class="kw">list</span>(<span class="dt">ar=</span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">-0.25</span>), <span class="dt">ma=</span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">-0.3</span>)))</span>
+<span id="cb43-3"><a href="#cb43-3"></a><span class="kw">plot</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-20-1.png" width="768" /></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">Acf</span>(x)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-20-2.png" width="768" /></p>
+<p>оценим модель</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">Arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## Series: x 
+## ARIMA(2,0,2) with non-zero mean 
+## 
+## Coefficients:
+##          ar1      ar2     ma1      ma2    mean
+##       0.5099  -0.2693  0.4636  -0.3309  0.0269
+## s.e.  0.1157   0.0346  0.1190   0.1122  0.0473
+## 
+## sigma^2 estimated as 1.009:  log likelihood=-1422.06
+## AIC=2856.13   AICc=2856.21   BIC=2885.58</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">confint</span>(<span class="kw">arima</span>(x, <span class="dt">order=</span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>)))</span></code></pre></div>
+<pre><code>##                 2.5 %     97.5 %
+## ar1        0.28315655  0.7366981
+## ar2       -0.33701341 -0.2015434
+## ma1        0.23045771  0.6968166
+## ma2       -0.55079029 -0.1110161
+## intercept -0.06574923  0.1196155</code></pre>
+<ul>
+<li>Доверительные интервалы содержат настоящие значения параметров ar=c(0.5, -0.25), ma=c(0.5, -0.3), но являются достаточно широкими</li>
+</ul>
+</div>
+<div id="drift-смещение" class="slide section level2">
+<h1>Drift (смещение)</h1>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>n   &lt;-<span class="st"> </span><span class="dv">150</span></span>
+<span id="cb49-2"><a href="#cb49-2"></a>eps &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb49-3"><a href="#cb49-3"></a>x0  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n)</span>
+<span id="cb49-4"><a href="#cb49-4"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n){</span>
+<span id="cb49-5"><a href="#cb49-5"></a>  x0[i] &lt;-<span class="st"> </span>x0[i<span class="dv">-1</span>] <span class="op">+</span><span class="st"> </span>eps[i]</span>
+<span id="cb49-6"><a href="#cb49-6"></a>}</span>
+<span id="cb49-7"><a href="#cb49-7"></a><span class="kw">plot</span>(<span class="kw">ts</span>(x0), <span class="dt">main =</span> <span class="st">&#39;Случайное блуждание&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-22-1.png" width="768" /></p>
+<p>случайное блуждание со смещением</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>drift &lt;-<span class="st"> </span><span class="fl">0.5</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a>x1    &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n)</span>
+<span id="cb50-3"><a href="#cb50-3"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n){</span>
+<span id="cb50-4"><a href="#cb50-4"></a>  x1[i] &lt;-<span class="st"> </span>drift <span class="op">+</span><span class="st"> </span>x1[i<span class="dv">-1</span>] <span class="op">+</span><span class="st"> </span>eps[i]</span>
+<span id="cb50-5"><a href="#cb50-5"></a>}</span>
+<span id="cb50-6"><a href="#cb50-6"></a><span class="kw">plot</span>(<span class="kw">ts</span>(x1), <span class="dt">main =</span> <span class="st">&#39;Cлучайное блуждание со смещением&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-23-1.png" width="768" /></p>
+<p>случайное блуждение с линейным трендом</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>trend &lt;-<span class="st"> </span><span class="kw">seq_len</span>(n)<span class="op">*</span><span class="fl">0.05</span></span>
+<span id="cb51-2"><a href="#cb51-2"></a>x2    &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n)</span>
+<span id="cb51-3"><a href="#cb51-3"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n){</span>
+<span id="cb51-4"><a href="#cb51-4"></a>  x2[i] &lt;-<span class="st"> </span>trend[i] <span class="op">+</span><span class="st"> </span>x2[i<span class="dv">-1</span>] <span class="op">+</span><span class="st"> </span>eps[i]</span>
+<span id="cb51-5"><a href="#cb51-5"></a>}</span>
+<span id="cb51-6"><a href="#cb51-6"></a><span class="kw">plot</span>(<span class="kw">ts</span>(x2), <span class="dt">main =</span> <span class="st">&#39;Линейный тренд и случайное блуждание&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-24-1.png" width="768" /></p>
+<p>мы обычно переходили от модели в уровнях (лог-цены) к разностям (лог-доходности) для того, чтобы обеспечить стационарность данных.</p>
+<p>Модель случайного блуждания “в уровнях” по сути представляет собой AR(1) модель с коэффициентом 1. Уравнение можно записать по другому</p>
+<p><span class="math display">\[x_t  - x_{t-1} = \mu \]</span> или</p>
+<p><span class="math display">\[x_t = x_{t-1} + \mu \]</span> где <span class="math inline">\(\mu\)</span> - это смещение (drift). При расчете разностей модели будут идентичны.</p>
+</div>
+<div id="построение-arima-моделей" class="slide section level2">
+<h1>Построение ARIMA-моделей</h1>
+<ul>
+<li>Серия <span class="math inline">\({x_t}\)</span> является <span class="math inline">\(ARIMA(p,d,q)\)</span> моделью, если <span class="math inline">\(\Delta^d x_t\)</span> является моделью <span class="math inline">\(ARMA(p,q)\)</span>.</li>
+<li>К примеру, если лог-доходности моделируются ARMA(p,q), то лог-цены будут ARIMA(p,1,q).</li>
+<li>Random walk является моделью ARIMA(0,1,0), а белый шум – моделью ARIMA(0,0,0).</li>
+</ul>
+</div>
+<div id="arima-модели-для-индекса-ммвб" class="slide section level2">
+<h1>ARIMA модели для индекса ММВБ</h1>
+<p>Построим несколько моделей для логарифмов индекса ММВБ</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="co"># без константы (сводобного члена)</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a>fit<span class="fl">.00</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-3"><a href="#cb52-3"></a>fit<span class="fl">.01</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-4"><a href="#cb52-4"></a>fit<span class="fl">.02</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-5"><a href="#cb52-5"></a>fit<span class="fl">.10</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-6"><a href="#cb52-6"></a>fit<span class="fl">.11</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-7"><a href="#cb52-7"></a>fit<span class="fl">.12</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-8"><a href="#cb52-8"></a>fit<span class="fl">.20</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-9"><a href="#cb52-9"></a>fit<span class="fl">.21</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-10"><a href="#cb52-10"></a>fit<span class="fl">.22</span> &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">FALSE</span>)</span>
+<span id="cb52-11"><a href="#cb52-11"></a></span>
+<span id="cb52-12"><a href="#cb52-12"></a><span class="co"># с константой </span></span>
+<span id="cb52-13"><a href="#cb52-13"></a>fit<span class="fl">.00</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-14"><a href="#cb52-14"></a>fit<span class="fl">.01</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-15"><a href="#cb52-15"></a>fit<span class="fl">.02</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-16"><a href="#cb52-16"></a>fit<span class="fl">.10</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-17"><a href="#cb52-17"></a>fit<span class="fl">.11</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-18"><a href="#cb52-18"></a>fit<span class="fl">.12</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-19"><a href="#cb52-19"></a>fit<span class="fl">.20</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-20"><a href="#cb52-20"></a>fit<span class="fl">.21</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span>
+<span id="cb52-21"><a href="#cb52-21"></a>fit<span class="fl">.22</span>c &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">include.drift=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># аггрегируем результаты</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>models &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">p =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dv">2</span>),</span>
+<span id="cb53-3"><a href="#cb53-3"></a>                     <span class="dt">d =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">18</span>),</span>
+<span id="cb53-4"><a href="#cb53-4"></a>                     <span class="dt">q =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dv">6</span>),</span>
+<span id="cb53-5"><a href="#cb53-5"></a>                     <span class="dt">include.drift =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="ot">FALSE</span>, <span class="dv">9</span>), <span class="kw">rep</span>(<span class="ot">TRUE</span>, <span class="dv">9</span>)),</span>
+<span id="cb53-6"><a href="#cb53-6"></a>                     <span class="dt">loglik =</span> <span class="kw">c</span>(fit<span class="fl">.00</span><span class="op">$</span>loglik, fit<span class="fl">.01</span><span class="op">$</span>loglik, fit<span class="fl">.02</span><span class="op">$</span>loglik,</span>
+<span id="cb53-7"><a href="#cb53-7"></a>                                fit<span class="fl">.10</span><span class="op">$</span>loglik, fit<span class="fl">.11</span><span class="op">$</span>loglik, fit<span class="fl">.12</span><span class="op">$</span>loglik,</span>
+<span id="cb53-8"><a href="#cb53-8"></a>                                fit<span class="fl">.20</span><span class="op">$</span>loglik, fit<span class="fl">.21</span><span class="op">$</span>loglik, fit<span class="fl">.22</span><span class="op">$</span>loglik,</span>
+<span id="cb53-9"><a href="#cb53-9"></a>                                fit<span class="fl">.00</span>c<span class="op">$</span>loglik, fit<span class="fl">.01</span>c<span class="op">$</span>loglik, fit<span class="fl">.02</span>c<span class="op">$</span>loglik,</span>
+<span id="cb53-10"><a href="#cb53-10"></a>                                fit<span class="fl">.10</span>c<span class="op">$</span>loglik, fit<span class="fl">.11</span>c<span class="op">$</span>loglik, fit<span class="fl">.12</span>c<span class="op">$</span>loglik,</span>
+<span id="cb53-11"><a href="#cb53-11"></a>                                fit<span class="fl">.20</span>c<span class="op">$</span>loglik, fit<span class="fl">.21</span>c<span class="op">$</span>loglik, fit<span class="fl">.22</span>c<span class="op">$</span>loglik),</span>
+<span id="cb53-12"><a href="#cb53-12"></a>                     <span class="dt">aicc =</span> <span class="kw">c</span>(fit<span class="fl">.00</span><span class="op">$</span>aicc, fit<span class="fl">.01</span><span class="op">$</span>aicc, fit<span class="fl">.02</span><span class="op">$</span>aicc,</span>
+<span id="cb53-13"><a href="#cb53-13"></a>                                fit<span class="fl">.10</span><span class="op">$</span>aicc, fit<span class="fl">.11</span><span class="op">$</span>aicc, fit<span class="fl">.12</span><span class="op">$</span>aicc,</span>
+<span id="cb53-14"><a href="#cb53-14"></a>                                fit<span class="fl">.20</span><span class="op">$</span>aicc, fit<span class="fl">.21</span><span class="op">$</span>aicc, fit<span class="fl">.22</span><span class="op">$</span>aicc,</span>
+<span id="cb53-15"><a href="#cb53-15"></a>                                fit<span class="fl">.00</span>c<span class="op">$</span>aicc, fit<span class="fl">.01</span>c<span class="op">$</span>aicc, fit<span class="fl">.02</span>c<span class="op">$</span>aicc,</span>
+<span id="cb53-16"><a href="#cb53-16"></a>                                fit<span class="fl">.10</span>c<span class="op">$</span>aicc, fit<span class="fl">.11</span>c<span class="op">$</span>aicc, fit<span class="fl">.12</span>c<span class="op">$</span>aicc,</span>
+<span id="cb53-17"><a href="#cb53-17"></a>                                fit<span class="fl">.20</span>c<span class="op">$</span>aicc, fit<span class="fl">.21</span>c<span class="op">$</span>aicc, fit<span class="fl">.22</span>c<span class="op">$</span>aicc),</span>
+<span id="cb53-18"><a href="#cb53-18"></a>                      <span class="dt">bic =</span> <span class="kw">c</span>(fit<span class="fl">.00</span><span class="op">$</span>bic, fit<span class="fl">.01</span><span class="op">$</span>bic, fit<span class="fl">.02</span><span class="op">$</span>bic,</span>
+<span id="cb53-19"><a href="#cb53-19"></a>                                fit<span class="fl">.10</span><span class="op">$</span>bic, fit<span class="fl">.11</span><span class="op">$</span>bic, fit<span class="fl">.12</span><span class="op">$</span>bic,</span>
+<span id="cb53-20"><a href="#cb53-20"></a>                                fit<span class="fl">.20</span><span class="op">$</span>bic, fit<span class="fl">.21</span><span class="op">$</span>bic, fit<span class="fl">.22</span><span class="op">$</span>bic,</span>
+<span id="cb53-21"><a href="#cb53-21"></a>                                fit<span class="fl">.00</span>c<span class="op">$</span>bic, fit<span class="fl">.01</span>c<span class="op">$</span>bic, fit<span class="fl">.02</span>c<span class="op">$</span>bic,</span>
+<span id="cb53-22"><a href="#cb53-22"></a>                                fit<span class="fl">.10</span>c<span class="op">$</span>bic, fit<span class="fl">.11</span>c<span class="op">$</span>bic, fit<span class="fl">.12</span>c<span class="op">$</span>bic,</span>
+<span id="cb53-23"><a href="#cb53-23"></a>                                fit<span class="fl">.20</span>c<span class="op">$</span>bic, fit<span class="fl">.21</span>c<span class="op">$</span>bic, fit<span class="fl">.22</span>c<span class="op">$</span>bic)</span>
+<span id="cb53-24"><a href="#cb53-24"></a>                     )</span>
+<span id="cb53-25"><a href="#cb53-25"></a><span class="kw">print</span>(models, <span class="dt">digits=</span><span class="dv">6</span>)</span></code></pre></div>
+<pre><code>##    p d q include.drift  loglik     aicc      bic
+## 1  0 1 0         FALSE 8124.44 -16246.9 -16241.0
+## 2  0 1 1         FALSE 8125.42 -16246.8 -16235.0
+## 3  0 1 2         FALSE 8125.78 -16245.5 -16227.8
+## 4  1 1 0         FALSE 8125.39 -16246.8 -16234.9
+## 5  1 1 1         FALSE 8125.64 -16245.3 -16227.5
+## 6  1 1 2         FALSE 8125.77 -16243.5 -16219.9
+## 7  2 1 0         FALSE 8125.77 -16245.5 -16227.8
+## 8  2 1 1         FALSE 8125.77 -16243.5 -16219.9
+## 9  2 1 2         FALSE 8125.80 -16241.6 -16212.0
+## 10 0 1 0          TRUE 8125.21 -16246.4 -16234.6
+## 11 0 1 1          TRUE 8126.15 -16246.3 -16228.6
+## 12 0 1 2          TRUE 8126.54 -16245.1 -16221.4
+## 13 1 1 0          TRUE 8126.12 -16246.2 -16228.5
+## 14 1 1 1          TRUE 8126.35 -16244.7 -16221.0
+## 15 1 1 2          TRUE 8126.53 -16243.0 -16213.5
+## 16 2 1 0          TRUE 8126.52 -16245.0 -16221.4
+## 17 2 1 1          TRUE 8126.53 -16243.0 -16213.5
+## 18 2 1 2          TRUE 8126.56 -16241.1 -16205.6</code></pre>
+</div>
+<div id="лучшая-модель-по-aic" class="slide section level2">
+<h1>Лучшая модель по AIC</h1>
+<p>выберем “лучшую” модель по критерию Акаике</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb55-2"><a href="#cb55-2"></a>models<span class="op">$</span>descr &lt;-<span class="st"> </span><span class="kw">paste</span>(models<span class="op">$</span>p, models<span class="op">$</span>q, models<span class="op">$</span>include.drift)</span>
+<span id="cb55-3"><a href="#cb55-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(models, <span class="kw">aes</span>(descr,aicc))</span>
+<span id="cb55-4"><a href="#cb55-4"></a>p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()<span class="op">+</span><span class="kw">coord_flip</span>()<span class="op">+</span><span class="kw">theme_minimal</span>()</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-27-1.png" width="768" /></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>models[<span class="kw">which</span>(models<span class="op">$</span>aicc <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(models<span class="op">$</span>aicc)),]</span></code></pre></div>
+<pre><code>##   p d q include.drift   loglik      aicc       bic     descr
+## 1 0 1 0         FALSE 8124.439 -16246.88 -16240.96 0 0 FALSE</code></pre>
+<p>какая модель минимизирует AIC?</p>
+</div>
+<div id="оценка-лучшей-модели-aic" class="slide section level2">
+<h1>Оценка “лучшей” модели (AIC)</h1>
+<p>выбрали “вторую” лучшую модель по критерию AIC</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>fit.best &lt;-<span class="st"> </span><span class="kw">Arima</span>(MICEX_log, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">include.drift=</span> <span class="ot">FALSE</span>)</span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="kw">print</span>(fit.best)</span></code></pre></div>
+<pre><code>## Series: MICEX_log 
+## ARIMA(0,1,1) 
+## 
+## Coefficients:
+##          ma1
+##       0.0272
+## s.e.  0.0194
+## 
+## sigma^2 estimated as 0.0001579:  log likelihood=8125.42
+## AIC=-16246.84   AICc=-16246.84   BIC=-16235</code></pre>
+</div>
+<div id="остатки-модели-arma" class="slide section level2">
+<h1>Остатки модели ARMA</h1>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>resid &lt;-<span class="st"> </span><span class="kw">residuals</span>(fit.best)</span>
+<span id="cb60-2"><a href="#cb60-2"></a><span class="kw">plot</span>(resid, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">col=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-29-1.png" width="768" /></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">Acf</span>(resid)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-29-2.png" width="768" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">Pacf</span>(resid)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-29-3.png" width="768" /></p>
+<ul>
+<li>даже в “лучшей” модели ARMA сохранилась автокорреляция в остатках</li>
+</ul>
+</div>
+<div id="cтатистика-ljung-box" class="slide section level2">
+<h1>Cтатистика Ljung-Box</h1>
+<ul>
+<li>Статистика Ljung-Box является классическим тестом на гипотезу о том, что набор автокорреляций в модели совместно отличается от 0.</li>
+<li>Тест не оценивает каждый индивидуальный лаг на отличие от 0, а оценивает совокупность лагов одновременно.</li>
+<li><span class="math inline">\(H0\)</span>: серия на каждом лаге является i.i.d., то есть корреляции между между лагами равны нулю</li>
+<li><span class="math inline">\(H1\)</span>: серия на каждом лаге не является i.i.d., то есть в ней сохраняется автокорреляция</li>
+</ul>
+<p>Формально тест рассчитывает следующую статистику:</p>
+<p><span class="math display">\[ Q = n(n+2) \sum_{k=1}^{h} \frac{\hat{\rho}^2}{n-k} \]</span></p>
+<p>где <span class="math inline">\(n\)</span> – количество наблюдений, <span class="math inline">\(\hat{\rho}^2\)</span> – выборочная автокорреляция на лаге <span class="math inline">\(k\)</span>, <span class="math inline">\(h\)</span> – тестируемый лаг.</p>
+<ul>
+<li>Мы отвергаем нулевую гипотезу <span class="math inline">\(H0\)</span>, если <span class="math inline">\(Q &gt; \chi^2_{a,h}\)</span> (для распределения хи-квадрат с <span class="math inline">\(h\)</span> степенями свободы).</li>
+<li>Мы можем не вдаваться в подробности оценки, а использовать функцию <code>Box.test</code> для проведения теста:</li>
+</ul>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="kw">Box.test</span>(resid, <span class="dt">lag=</span><span class="dv">10</span>, <span class="dt">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>, <span class="dt">fitdf=</span><span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## 
+##  Box-Ljung test
+## 
+## data:  resid
+## X-squared = 5.4284, df = 7, p-value = 0.6078</code></pre>
+<ul>
+<li>если мы используем тест на остатках модели, то необходимо скорректировать количество степеней свободы (<code>fitdf</code>)</li>
+<li>fitdf = p +q и тестируемые лаги (<code>lag</code>) должны быть больше <code>fitdf</code></li>
+<li>Тест указывает на сохранение автокорреляции в остатках модели</li>
+</ul>
+</div>
+<div id="построение-прогноза" class="slide section level2">
+<h1>Построение прогноза</h1>
+<p>Для построения прогноза необходимо использовать функцию <code>forecast</code> из одноименного пакета:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="kw">plot</span>(<span class="kw">forecast</span>(fit.best, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">level=</span><span class="dv">95</span>, <span class="dt">fan =</span> <span class="ot">TRUE</span>), <span class="dt">col=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-31-1.png" width="768" /></p>
+<ul>
+<li>h – определяет длину прогноза</li>
+<li>level – определяет доверительные интервалы для интервалов предсказания (prediction interval)</li>
+</ul>
+<p>Посмотрим “поближе” на прогноз, который сгенерировала модель ARMA(2,1).</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>fcst &lt;-<span class="st">  </span><span class="kw">forecast</span>(fit.best, <span class="dt">h =</span> <span class="dv">20</span>)</span>
+<span id="cb66-2"><a href="#cb66-2"></a><span class="kw">plot</span>(fcst<span class="op">$</span>mean)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-32-1.png" width="768" /></p>
+</div>
+<div id="построение-прогноза-с-помощью-auto.arima" class="slide section level2">
+<h1>Построение прогноза с помощью auto.arima</h1>
+<ul>
+<li>Пакет forecast позволяет автоматически находить лучшие спецификации ARMA моделей</li>
+</ul>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>fit1 &lt;-<span class="st"> </span><span class="kw">auto.arima</span>(MICEX_log, <span class="dt">ic =</span> <span class="st">&#39;aicc&#39;</span>)</span>
+<span id="cb67-2"><a href="#cb67-2"></a>fit1</span></code></pre></div>
+<pre><code>## Series: MICEX_log 
+## ARIMA(0,1,0) 
+## 
+## sigma^2 estimated as 0.000158:  log likelihood=8124.44
+## AIC=-16246.88   AICc=-16246.88   BIC=-16240.96</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a>fcst &lt;-<span class="st"> </span><span class="kw">forecast</span>(fit1, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">level=</span><span class="dv">95</span>, <span class="dt">fan =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb69-2"><a href="#cb69-2"></a><span class="kw">plot</span>(<span class="kw">forecast</span>(fit1, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">level=</span><span class="dv">95</span>, <span class="dt">fan =</span> <span class="ot">TRUE</span>), <span class="dt">col=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-33-1.png" width="768" /></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="kw">plot</span>(fcst<span class="op">$</span>mean[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>], <span class="dt">type  =</span> <span class="st">&#39;l&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-33-2.png" width="768" /></p>
+<ul>
+<li>Мы “нашли” вручную модель ARMA(2,1) или ARMA(2,0), в то время как ’auto.arima` предлагает нам модель ARMA(4,0).</li>
+</ul>
+</div>
+<div id="auto.arima-из-пакета-forecast" class="slide section level2">
+<h1>auto.arima из пакета forecast</h1>
+<p>мы также можем находить модели и строить прогнозы для нестационарных серий c помощью <code>auto.arima</code></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a>fit2 &lt;-<span class="st"> </span><span class="kw">auto.arima</span>(MICEX_log, <span class="dt">ic =</span> <span class="st">&#39;aicc&#39;</span>)</span>
+<span id="cb71-2"><a href="#cb71-2"></a>fit2</span></code></pre></div>
+<pre><code>## Series: MICEX_log 
+## ARIMA(0,1,0) 
+## 
+## sigma^2 estimated as 0.000158:  log likelihood=8124.44
+## AIC=-16246.88   AICc=-16246.88   BIC=-16240.96</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="kw">plot</span>(<span class="kw">forecast</span>(fit2, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">level=</span><span class="dv">95</span>, <span class="dt">fan =</span> <span class="ot">TRUE</span>), <span class="dt">col=</span><span class="dv">2</span>)</span>
+<span id="cb73-2"><a href="#cb73-2"></a></span>
+<span id="cb73-3"><a href="#cb73-3"></a>fit2 &lt;-<span class="st"> </span><span class="kw">auto.arima</span>(MICEX_log,</span>
+<span id="cb73-4"><a href="#cb73-4"></a>                   <span class="dt">ic =</span> <span class="st">&#39;aicc&#39;</span>, </span>
+<span id="cb73-5"><a href="#cb73-5"></a>                   <span class="dt">allowdrift =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb73-6"><a href="#cb73-6"></a>                   <span class="dt">allowmean =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb73-7"><a href="#cb73-7"></a>                   <span class="dt">lambda=</span><span class="ot">NULL</span>)</span>
+<span id="cb73-8"><a href="#cb73-8"></a><span class="kw">plot</span>(<span class="kw">forecast</span>(fit2, <span class="dt">h=</span><span class="dv">100</span>, <span class="dt">level=</span><span class="dv">95</span>, <span class="dt">fan =</span> <span class="ot">TRUE</span>), <span class="dt">col=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="lecture-3_files/figure-slidy/unnamed-chunk-34-1.png" width="768" /></p>
+</div>
+<div id="выводы" class="slide section level2">
+<h1>Выводы</h1>
+<ul>
+<li>Мы используем PACF для определения ориентировочного порядка AR-моделей (последний значимый лаг на PACF определяет порядок модели - <span class="math inline">\(p\)</span>)</li>
+<li>Мы используем ACF для определения порядка MA-моделей (последний значимый лаг на АСА определяет порядок модели - <span class="math inline">\(q\)</span>).</li>
+<li>Информационные критерии (AIC, BIC) часто используются для выбора оптимальной модели. Эти критерии “штрафуют” модели за сложность (количество оцениваемых параметров)</li>
+<li>ARMA модели позволяют использовать меньше параметров чем AR или MA по отдельности</li>
+<li>Все ARMA модели не позволяют моделировать меняющуюся во времени волатильность</li>
+<li>Прогнозы на основе ARMA имеет смысл строить только на несколько периодов вперед</li>
+</ul>
+</div>
+<div id="использованные-источники" class="slide section level2">
+<h1>Использованные источники:</h1>
+<ol style="list-style-type: decimal">
+<li>“An Introduction to Analysis of Financial Data with R” (Ruey S. Tsay)</li>
+<li>“Statistics and Data Analysis for Financial Engineering” (David Ruppert &amp; David Matteson)</li>
+<li>Analyzing Financial Data and Implementing Financial Models Using R (Clifford Ang)</li>
+<li>Forecasting Financial Time Series (Patrick Perry)</li>
+</ol>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>
