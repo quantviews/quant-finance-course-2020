@@ -11,5 +11,7 @@
 
 1. [Вводная лекция](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-0.html)
 2. [Введение в R](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-1.html#(1))  
+3. [Основные особенности финансовых серий и построение AR-моделей](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-2.html#(1))
+4. [Линейные модели финансовых серий (MA, ARMA и ARIMA)](https://quantviews.github.io/quant-finance-course-2020/lectures/lecture-3.html#(1))
 
 
