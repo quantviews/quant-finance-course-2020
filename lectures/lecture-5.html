@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Салихов Марсель (marcel.salikhov@gmail.com)" />
+  <meta name="date" content="2021-02-03" />
+  <meta name="copyright" content="НИУ ВШЭ. Салихов Марсель (marcel.salikhov@gmail.com)"/>
+  <title>Оптимизация инвестиционных портфелей   “Количественные финансы”</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+  <link href="libs/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="libs/slidy-2/scripts/slidy.js"></script>
+  <script src="libs/slidy_shiny-1/slidy_shiny.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="styles.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Оптимизация инвестиционных портфелей <br> “Количественные финансы”</h1>
+  <p class="author">
+Салихов Марсель (<a href="mailto:marcel.salikhov@gmail.com" class="email">marcel.salikhov@gmail.com</a>)
+  </p>
+  <p class="date">2021-02-03</p>
+</div>
+<div id="цели-лекции" class="slide section level2">
+<h1>Цели лекции</h1>
+<ul>
+<li>изучить основы современной портфельной теории (портфельная теория Марковица)</li>
+<li>понять, что такое безрисковая ставка<br />
+</li>
+<li>понять, как рассчитываются доходность и риск портфелей, состоящих рисковых и безрисковых активов</li>
+<li>разобраться в преимуществах диверсификации</li>
+<li>понять, что такое эффективная граница (effective frontier) и эффективный (оптимальный) портфель</li>
+<li>понять, что такое тангенциальный портфель (tangency portfolio)</li>
+<li>посчитать эффективный портфель, состоящий из акций 5 компаний (Газпром, Сбербанк, Норникель, Магнит, МТС)</li>
+<li>понять ограничения оптимизации “риск/доходность” на практике</li>
+</ul>
+</div>
+<div id="риск-и-доходность" class="slide section level2">
+<h1>Риск и доходность</h1>
+<ul>
+<li>Базовая концепция в финансах – это компромисс между риском и доходностью.</li>
+<li>Если вам предлагают две инвестиции с одинаковым уровня ожидаемого риска, но разной ожидаемой доходностью, вы выберете вариант, который предлагает <strong>большую доходность</strong>.</li>
+<li>Если две инвестиции предлагают одинаковый уровень ожидаемой доходности, но разный уровень риска, то вы выберете инвестицию с <strong>меньшим уровнем риска</strong>.</li>
+<li>Но что делать, если вам надо распределить ваши свободные сбережения между 30 наиболее ликвидными бумагами, которые торгуются на российском (или на глобальном рынке) рынке. Как выбрать доли распределения в портфеле?</li>
+<li>Оптимальное распределение долей в портфеле – задача <strong>asset allocation</strong> – важный вопрос. Основная часть отличий в риск/доходностях разных портфелей связаны именно с распределением долей, а не с различиями в доходностях отдельных активов.</li>
+</ul>
+</div>
+<div id="гарри-марковиц-harry-markowitz-основатель-современной-портфельной-теории" class="slide section level2">
+<h1>Гарри Марковиц (Harry Markowitz) – основатель современной портфельной теории</h1>
+<ul>
+<li><strong>Markowitz, H.M. (March 1952). “Portfolio Selection”. The Journal of Finance. 7 (1): 77–91</strong> – статья, которая заложила основы современной портфельной теории (modern portfolio theory).</li>
+<li>Идеи MPT по сути привели к созданию всей отрасли пассивного инвестирования. В настоящее время индексные фонды управляют триллионами долларов.</li>
+</ul>
+<div align="center">
+<p><img src="fig/harry-markowitz.jpg" width="850" height="565" /></p>
+</div>
+</div>
+<div id="корреляция-и-ковариация-двух-активов-пример" class="slide section level2">
+<h1>Корреляция и ковариация двух активов – пример</h1>
+<p>Пусть у нас есть акции компаний - А и Б. Доходность акций компании А имеет проциклический характер, то есть растет, когда экономика на подъеме.</p>
+<p>Доходность Б носит антициклический характер – уменьшается, когда экономика на подъеме, но растет, когда наступает спад.</p>
+<p>Предположим, что у нас есть следующее распределение доходностей в зависимости от состояния экономики:</p>
+<p><strong>Таблица. Предполагаемая доходность для акций компаний А и Б </strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Состояние экономики</th>
+<th>Вероятность</th>
+<th>Доходность А</th>
+<th>Доходность Б</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Подъем</td>
+<td>0,33</td>
+<td>0,385</td>
+<td>-0,225</td>
+</tr>
+<tr class="even">
+<td>Нормальное</td>
+<td>0,33</td>
+<td>0,140</td>
+<td>0,02</td>
+</tr>
+<tr class="odd">
+<td>Спад</td>
+<td>0,33</td>
+<td>-0,105</td>
+<td>0,265</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Таблица. Расчет ожидаемой доходности для акций А </strong></p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Доходность</th>
+<th>Отклонение от ожид. доходности</th>
+<th>Отклонение в квадрате</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Подъем</td>
+<td>0,385</td>
+<td>0,245</td>
+<td>0,060</td>
+</tr>
+<tr class="even">
+<td>Нормальное</td>
+<td>0,140</td>
+<td>0,000</td>
+<td>0,000</td>
+</tr>
+<tr class="odd">
+<td>Спад</td>
+<td>-0,105</td>
+<td>-0,245</td>
+<td>0,060</td>
+</tr>
+</tbody>
+</table>
+<p>Ожидаемая доходность = 1/3 (0,385 - 0,14 - 0,105) = 0,14</p>
+<p>Дисперсия = 1/3 (0,060 + 0 + 0,060) = 0,04</p>
+<p>Стандартное отклонение = 0,20</p>
+<p><strong>Таблица. Расчет ожидаемой доходности для акций Б </strong></p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Доходность</th>
+<th>Отклонение от ожид. доходности</th>
+<th>Отклонение в квадрате</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Подъем</td>
+<td>-0,225</td>
+<td>-0,245</td>
+<td>0,060</td>
+</tr>
+<tr class="even">
+<td>Нормальное</td>
+<td>0,020</td>
+<td>0,000</td>
+<td>0,000</td>
+</tr>
+<tr class="odd">
+<td>Спад</td>
+<td>0,265</td>
+<td>0,245</td>
+<td>0,060</td>
+</tr>
+</tbody>
+</table>
+<p>Ожидаемая доходность = 1/3 (-0,225 + 0,2 + 0,265) = 0,02</p>
+<p>Дисперсия = 1/3 (0,060 + 0 + 0,060) = 0,04</p>
+<p>Стандартное отклонение = 0,20</p>
+</div>
+<div id="доходность-портфеля-из-двух-акций-а-и-б" class="slide section level2">
+<h1>Доходность портфеля из двух акций А и Б</h1>
+<p>Пусть у нас есть 100 тыс. рублей, который мы поровну распределили между акциями А и Б (по 50 тыс. рублей).</p>
+<p>Какова ожидаемая доходность и стандартное отклонение этого портфеля?</p>
+<p><strong>Таблица. Доходность портфеля из акций А и Б </strong></p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="8%" />
+<col width="8%" />
+<col width="24%" />
+<col width="24%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Состояние экономики</th>
+<th>Доходность А</th>
+<th>Доходность Б</th>
+<th>Доход от 50 тыс. рублей вложенных в А</th>
+<th>Доход от 50 тыс. рублей вложенных в Б</th>
+<th>Доход портфеля (50% А и 50% Б)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Подъем</td>
+<td>0,385</td>
+<td>-0,225</td>
+<td>69,25</td>
+<td>38,75</td>
+<td>108,00</td>
+</tr>
+<tr class="even">
+<td>Нормальное</td>
+<td>0,140</td>
+<td>0,020</td>
+<td>57,00</td>
+<td>51,00</td>
+<td>108,00</td>
+</tr>
+<tr class="odd">
+<td>Спад</td>
+<td>-0,105</td>
+<td>0,265</td>
+<td>44,75</td>
+<td>63,25</td>
+<td>108,00</td>
+</tr>
+</tbody>
+</table>
+<p>Результат – независимо от состояния экономики доходность портфеля составляет 8%, стандартное отклонение = 0.</p>
+<p>Любой риск исключен!</p>
+</div>
+<div id="ковариация-и-корреляция-а-и-б" class="slide section level2">
+<h1>Ковариация и корреляция А и Б</h1>
+<p>Этот результат – полное исключение риска - связан с тем, что активы А и Б имеют абсолютную отрицательную корреляцию =-1.</p>
+<p><strong>Таблица. Ковариация и корреляция А и Б </strong></p>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="27%" />
+<col width="27%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Состояние экономики</th>
+<th>Отклонение от ожид. доходности А</th>
+<th>Отклонение от ожид. доходности Б</th>
+<th>Произведение отклонений доходности</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Подъем</td>
+<td>0,245</td>
+<td>-0,245</td>
+<td>-0,060025</td>
+</tr>
+<tr class="even">
+<td>Нормальное</td>
+<td>0,000</td>
+<td>0,000</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Спад</td>
+<td>-0,245</td>
+<td>0,245</td>
+<td>-0,060025</td>
+</tr>
+</tbody>
+</table>
+<p>Ковариация = 1/3(-0,060025 + 0 + 0,060025) = -0,04</p>
+<p>Корреляция = -0,04/(0,20 * 0,20) = -1</p>
+</div>
+<div id="ковариация-и-корреляция-доходностей" class="slide section level2">
+<h1>Ковариация и корреляция доходностей</h1>
+<ul>
+<li><strong>Ковариация</strong> позволяет определить, как изменяются доходности двух бумаг – в одном направлении (положительно), или в противоположных (отрицательно) направлениях.</li>
+</ul>
+<p><span class="math display">\[\sigma_{1,2} = \sum p_i (X_1 - E(X_1))(X_2 - E(X_2)) \]</span></p>
+<p><strong>Корреляция</strong> – нормированная на произведение стандартных доходностей ковариация.</p>
+<p><span class="math display">\[\rho = \frac{\sigma_{1,2}}{\sigma_1 \sigma_2} \]</span></p>
+</div>
+<div id="безрисковый-актив" class="slide section level2">
+<h1>Безрисковый актив</h1>
+<ul>
+<li><strong>Безрисковый актив</strong> – бумага, которая предлагает предсказуемую ставку доходности в выбранной валюте и в пределах горизонта данного инвестора.</li>
+<li>Если брать общую ситуацию, когда нет конкретного инвестора, то безрисковыми активам следует считать те из них, которые предлагают предсказуемую доходность инвестору в пределах короткого периода принятия решения – торгового дня.</li>
+<li>Если за расчетную единицу принят рубль, а период принятия решений – один рабочий день, то безрисковой ставкой доходности можно считать процентную ставку по коротким ОФЗ.</li>
+<li>Другие альтернативные варианты безрисковой ставки в рублях – ставка по депозитам Сбербанка или других банков, ставка на рынке межбанковского кредитования (MIACR или другие).</li>
+</ul>
+</div>
+<div id="портфель-безрискового-актива-и-единственного-рискового-актива" class="slide section level2">
+<h1>Портфель безрискового актива и единственного рискового актива</h1>
+<ul>
+<li>Пусть вы решили инвестировать 100 тыс. рублей. Перед вами безрисковый актив, который предлагает доходность в 8% и рисковый актив с ожидаемой ставкой доходности в 14% и стандартным отклонением в 20% (фондовый индекс).</li>
+</ul>
+<p>Какую часть от 100 тыс. рублей вам следует вложить в рисковый актив?</p>
+<p>Пример расчета соотношений доходности и риска при разных долях в рисковом активе:</p>
+<p><strong>Таблица. Комбинация риск/доходность для портфеля из рискового и безрискового актива</strong></p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="25%" />
+<col width="28%" />
+<col width="17%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Вариант портфеля</th>
+<th>Доля портфеля в рисковом активе</th>
+<th>Доля портфеля в безрисковом активе</th>
+<th>Ожидаемая доходность</th>
+<th>Ст. отклонение</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>А</td>
+<td>0%</td>
+<td>100%</td>
+<td>8%</td>
+<td>0%</td>
+</tr>
+<tr class="even">
+<td>Б</td>
+<td>25%</td>
+<td>75%</td>
+<td>10%</td>
+<td>5%</td>
+</tr>
+<tr class="odd">
+<td>С</td>
+<td>50%</td>
+<td>50%</td>
+<td>11%</td>
+<td>10%</td>
+</tr>
+<tr class="even">
+<td>E</td>
+<td>75%</td>
+<td>25%</td>
+<td>13%</td>
+<td>15%</td>
+</tr>
+<tr class="odd">
+<td>D</td>
+<td>100%</td>
+<td>0%</td>
+<td>14%</td>
+<td>20%</td>
+</tr>
+</tbody>
+</table>
+<p>Формула для расчета ожидаемой доходности портфеля:</p>
+<p><span class="math display">\[ E(r) = w E(r_s) + (1-w)r_f = r_f + w[E(r_s) - r_f] \]</span> где <span class="math inline">\(w\)</span> – доля портфеля в рисковом активе.</p>
+<p>Если вы выразим <span class="math inline">\(w\)</span>, тогда получим</p>
+<p><span class="math display">\[w = \frac{E(r) - r_f}{E(r_s) - r_f}\]</span> Стандартное отклонение портфеля, состоящего из безрискового актива и рискового актива, равно произведению стандартного отклонения рискового актива на его долю в портфеле.</p>
+<p><span class="math display">\[\sigma = \sigma_s w \]</span></p>
+</div>
+<div id="кривая-рискдоходность---портфель-из-безрискового-и-рискового-активов" class="slide section level2">
+<h1>Кривая риск/доходность - портфель из безрискового и рискового активов</h1>
+<p>Построим в R график риск/доходность портфеля для разных вариантов w:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">=</span> <span class="fl">0.08</span> <span class="co"># безрисковая доходность </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fl">0.14</span> <span class="co"># доходность рискового актива</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sd1 <span class="ot">&lt;-</span> <span class="fl">0.20</span> <span class="co"># ст. отклонение рискового актива</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">200</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>r_p <span class="ot">&lt;-</span> w<span class="sc">*</span>r1 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>w)<span class="sc">*</span>rf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sd_p <span class="ot">&lt;-</span> w<span class="sc">*</span>sd1</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sd_p, r_p, <span class="at">type =</span> <span class="st">&#39;l&#39;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.14</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.20</span>),  <span class="at">xaxs=</span><span class="st">&quot;i&quot;</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>,<span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;Кривая риск/доходность - портфель из безрискового и рискового активов&#39;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&#39;Стандартное отклонение портфеля&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;Доходность портфеля&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Соотношение риск/доходность для портфеля из безрискового актива и рискового актива предоставляет собой прямую линию.</p>
+<p>Пересечение линии с нулем по оси х – безрисковая ставка.</p>
+<p>Наклон линии – <span class="math inline">\(\frac{E(r_s)-r_f}{\sigma_s}\)</span>.</p>
+<p>Угол наклона кривой характеризует <strong>дополнительную ожидаемую доходность</strong>, предлагаемую рынком для каждой дополнительной единицы риска, которую согласен нести инвестор.</p>
+</div>
+<div id="портфель-из-двух-рисковых-активов" class="slide section level2">
+<h1>Портфель из двух рисковых активов</h1>
+<p>Рассмотрим ситуацию, когда в портфеле есть два вида рисковых активов.</p>
+<p>В этом случае необходим анализ соотношения риск/доходность портфеля (в прошлый раз мы считали, что риск безрискового актива равен нулю).</p>
+<p>Ожидаемая доходность портфеля будет равна:</p>
+<p><span class="math display">\[ E(r) = w E(r_1) + (1-w) E(r_2) \]</span> формула дисперсии будет выглядеть следующим образом:</p>
+<p><span class="math display">\[\sigma^2 = w^2\sigma_1^2 + (1-w)^2\sigma_2^2 + 2w(1-w)\rho \sigma_1 \sigma_2 \]</span> (её можно вывести из обычного определения дисперсии).</p>
+</div>
+<div id="преимущества-диверсификации" class="slide section level2">
+<h1>Преимущества диверсификации</h1>
+<p><strong>Важно: дисперсия портфеля зависит от корреляции между активами, в то время как ожидаемая доходность не зависит от нее</strong>.</p>
+<p>Если мы предположим, что <span class="math inline">\(\rho = 1\)</span>, тогда</p>
+<p><span class="math display">\[\sigma = w \sigma_1 + (1-w) \sigma_2 \]</span> То есть, риск портфеля является взвешенной комбинацией рисков актива 1 и актива 2.</p>
+<p>Однако в реальности <span class="math inline">\(\rho &lt; 1\)</span>. Это означает, что риск портфеля будет <strong>меньше</strong> средневзвешенной комбинации рисков отдельных активов в портфеле. Это и есть преимущества <strong>диверсификации</strong> – возможность уменьшить риск без снижения ожидаемой доходности.</p>
+</div>
+<div id="распределение-ожидаемых-доходностей-для-рисковых-активов-двух-видов" class="slide section level2">
+<h1>Распределение ожидаемых доходностей для рисковых активов двух видов</h1>
+<p>Пусть у нас имеется два рисковых актива (1 и 2). Параметры распределения их доходностей представлены в таблице:</p>
+<p><strong>Таблица. Распределение ожидаемых доходностей для рисковых активов двух видов</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Актив 1</th>
+<th>Актив 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cреднее</td>
+<td>0,14</td>
+<td>0,08</td>
+</tr>
+<tr class="even">
+<td>Стандартное отклонение</td>
+<td>0,20</td>
+<td>0,15</td>
+</tr>
+<tr class="odd">
+<td>Корреляция</td>
+<td>0,00</td>
+<td>0,00</td>
+</tr>
+</tbody>
+</table>
+<p>Рассмотрим соотношение риск/доходность для портфеля, который состоит из активов 1 и 2 в разных соотношениях.</p>
+<p>** Таблица. Риск-доходость портфеля при разных соотношениях рисковых активов в портфеле**</p>
+<table>
+<thead>
+<tr class="header">
+<th>Портфель</th>
+<th>Доля в активе 1</th>
+<th>Доля в активе 2</th>
+<th>Ожидаемая доходность</th>
+<th>Ст. отклонение</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>А</td>
+<td>0</td>
+<td>100%</td>
+<td>0,0800</td>
+<td>0,1500</td>
+</tr>
+<tr class="even">
+<td>Б</td>
+<td>25%</td>
+<td>75%</td>
+<td>0,0950</td>
+<td>0,1231</td>
+</tr>
+<tr class="odd">
+<td>min variance</td>
+<td>36%</td>
+<td>64%</td>
+<td>0,1016</td>
+<td>0,1200</td>
+</tr>
+<tr class="even">
+<td>С</td>
+<td>50%</td>
+<td>50%</td>
+<td>0,1100</td>
+<td>0,1250</td>
+</tr>
+<tr class="odd">
+<td>D</td>
+<td>100%</td>
+<td>0%</td>
+<td>0,1400</td>
+<td>0,2000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="кривая-рискдоходность-для-портфеля-из-двух-рисковых-активов" class="slide section level2">
+<h1>Кривая риск/доходность для портфеля из двух рисковых активов</h1>
+<p>Построим кривую риск-доходность для такого портфеля в R:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fl">0.14</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="fl">0.08</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sd1 <span class="ot">&lt;-</span> <span class="fl">0.20</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sd2 <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>r_p2 <span class="ot">&lt;-</span> w<span class="sc">*</span>r1 <span class="sc">+</span>(<span class="dv">1</span><span class="sc">-</span>w)<span class="sc">*</span>r2</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>sd_p2 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(w<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sd1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>w)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sd2<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>w<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>w)<span class="sc">*</span>rho<span class="sc">*</span>sd1<span class="sc">*</span>sd2)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sd_p2, r_p2,<span class="at">type =</span> <span class="st">&#39;l&#39;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.21</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.0575</span>, <span class="fl">0.145</span>),  <span class="at">xaxs=</span><span class="st">&quot;i&quot;</span>, <span class="at">col =</span> <span class="st">&#39;black&#39;</span>,<span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;Кривая риск/доходность - портфель из двух рисковых активов&#39;</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&#39;Стандартное отклонение портфеля&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;Доходность портфеля&#39;</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fl">0.12</span>, <span class="at">y =</span> <span class="fl">0.1016</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="at">x =</span> <span class="fl">0.12</span>, <span class="at">y =</span> <span class="fl">0.1016</span>, <span class="at">labels =</span> <span class="st">&#39;Портфель с минимальной дисперсией&#39;</span>, <span class="at">adj =</span> <span class="sc">-</span><span class="fl">0.1</span>)</span></code></pre></div>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-2-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Самая левая точка этого множества – <strong>портфель с минимальной дисперсией</strong> (<strong>minimum variance portfolio</strong>)</li>
+<li>Точки на кривой, которые имеют ожидаемую доходность не меньше чем у портфеля с минимальной дисперсией, составляют <strong>эффективную границу</strong> (effective frontier)</li>
+<li>Портфели, которые находятся на эффективной границе, называются <strong>эффективными портфелями</strong>.</li>
+</ul>
+</div>
+<div id="оптимальная-комбинация-рискованных-активов" class="slide section level2">
+<h1>Оптимальная комбинация рискованных активов</h1>
+<p>Теперь рассмотрим комбинации риск/доходность в ситуации, когда мы можем объединить безрисковый актив и активы 1 и 2.</p>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-3-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Точка пересечения прямой линии и кривой эффективного портфеля (T) является <strong>оптимальной комбинацией рискованных активов</strong>. Ее также называют <strong>тангенциальным портфелем</strong> (<strong>tangency portfolio</strong>).</li>
+</ul>
+<p>В нашем случае это точка, которой соответствует w = 69,23% (доля рискованного актива 1) в портфеле. Это означает, что для такого портфеля: <span class="math inline">\(E(r_p) = 0,122\)</span>, а <span class="math inline">\(\sigma = 0,146\)</span>.</p>
+<ul>
+<li><strong>Точка F</strong> – доходность безрискового актива</li>
+<li><strong>R1, R2</strong> – портфели состоящие из полностью из актива 1 или актива 2</li>
+<li>Красным выделена эффективная граница. Портфели которые находятся на ней – эффективные, портфели, которые находятся на черной линии - не эффективны.</li>
+<li>P – типичный портфель, который находится на эффективной границе (эффективный портфель)</li>
+</ul>
+</div>
+<div id="показатель-шарпа" class="slide section level2">
+<h1>Показатель Шарпа</h1>
+<ul>
+<li>Обратите внимание, что голубая линии, которая соединяет точку F и T лежит выше пурпурной линии, которая соединяет точку F и типичный портфель. Это означает, что для каждого значения <span class="math inline">\(\sigma_p\)</span> – голубая линия дает лучшее соотношение риск-доходность, чем пурпурная.</li>
+<li>Угол наклона каждой линии, которая проходит через точку F и точку на кривой – является <strong>“показателем Шарпа”</strong> (Sharpe ratio)</li>
+</ul>
+<p>Показатель Шарпа равен:</p>
+<p><span class="math display">\[\frac{E(R_p) - r_f}{\sigma_p} \]</span></p>
+<ul>
+<li>по сути показатель Шарпа представляет собой <strong>вознаграждение за риск</strong>.</li>
+<li>Любая линия, которая имеет больший угол наклона (показатель Шарпа), обеспечивает более высокий уровень ожидаемой доходности для заданного уровня риска. Поэтому чем выше показатель Шарпа, тем лучше – неважно, какой уровень риска вы хотите принять.</li>
+<li>Точка T будет иметь максимальное значение показателя Шарпа.</li>
+</ul>
+</div>
+<div id="оптимальный-портфель-из-безрискового-и-рисковых-активов" class="slide section level2">
+<h1>Оптимальный портфель из безрискового и рисковых активов</h1>
+<ul>
+<li>Оптимальный (эффективный) портфель из безрискового и рисковых активов сочетает тангенциальный портфель и безрисковый актив.</li>
+<li>Эффективный портфель имеет более высокое ожидаемое значением по сравнению с другими портфелями, которые имеют такое же или меньшее значение риска</li>
+<li>Эффективный портфель имеет меньший уровень риска по сравнению с другими портфелями, которые имеют аналогичное или большее значение доходности</li>
+</ul>
+</div>
+<div id="влияние-корреляции-на-уровень-риска-портфеля" class="slide section level2">
+<h1>Влияние корреляции на уровень риска портфеля</h1>
+<ul>
+<li>Положительная корреляция между активами увеличивает риск портфеля, отрицательная корреляция - уменьшает риск. Посмотрим на изменение точки T (тангенциальный портфель) при разных значениях корреляции рисковых активов:</li>
+</ul>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-4-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="эффективный-портфель-со-множестом-рисковых-активов" class="slide section level2">
+<h1>Эффективный портфель со множестом рисковых активов</h1>
+<ul>
+<li>В общем случае у нас может быть множество рисковых активов с разными характеристиками риск-доходности. В матричном виде это означает, что мы минимизируем следующее выражение:</li>
+</ul>
+<p><span class="math display">\[w^T \Sigma w - q R^Tw \rightarrow min\]</span> где</p>
+<ul>
+<li><span class="math inline">\(w\)</span> – вектор весов портфеля, такой что (<span class="math inline">\(\Sigma w_i = 1\)</span>)</li>
+<li><span class="math inline">\(\Sigma\)</span> – матрица ковариаций активов</li>
+<li><span class="math inline">\(q \geq 0\)</span> – фактор склонности к риску, такой что при q= 0 мы предпочитаем минимальный риск, при <span class="math inline">\(q -&gt; \infty\)</span> мы готовы идти на неограниченный риск.</li>
+<li><span class="math inline">\(R\)</span> – вектор доходностей активов</li>
+<li><span class="math inline">\(w^T \Sigma w\)</span> – дисперсия доходностей портфеля</li>
+<li><span class="math inline">\(R^T\)</span> – ожидаемая доходность портфеля.</li>
+</ul>
+<p>Мы можем использовать численные методы, чтобы найти оптимальные значения весов. Обычно используют методы <strong>квадратичного программирования</strong>, которые позволяют находить экстремумы квадратичных функций при заданных линейных ограничениях. В R можно использовать функцию <code>solve.QP</code> из пакета <code>quadprog</code>.</p>
+</div>
+<div id="портфель-газпром-сбербанк-и-норникель-магнит-и-мтс" class="slide section level2">
+<h1>Портфель – Газпром, Сбербанк и Норникель, Магнит и МТС</h1>
+<p>Рассмотрим портфель из акций 5 российских компаний из разных отраслей.</p>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-5-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Примечание: в данном случае мы не учитываем выплаченне дивиденды в доходностях.</p>
+</div>
+<div id="доходность-и-риск" class="slide section level2">
+<h1>Доходность и риск</h1>
+<p>Рассчитаем показатели доходности и риска (стандартного отклонения) с помощью функций из пакета <code>PerformanceAnalytics</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PerformanceAnalytics)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Return.annualized</span>(rtns, <span class="at">geometric =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>                        GAZP      SBER     GMKN       MGNT       MTSS
+Annualized Return 0.01200609 0.1148882 0.139333 0.02858543 0.03916703</code></pre>
+<p>Максимальная доходность (% в год) у Сбербанка (11,5%), у Магнита - минимальная доходность (около 2,8% за период в год).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">StdDev.annualized</span>(rtns, <span class="at">geometric =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>                                   GAZP      SBER      GMKN      MGNT      MTSS
+Annualized Standard Deviation 0.2628291 0.3251434 0.2943874 0.3259037 0.2775819</code></pre>
+<p>Показатели риска максимальны у акций Сбербанка (32,0%), минимальны – у акций Газпрома.</p>
+</div>
+<div id="график-рискдоходность" class="slide section level2">
+<h1>График риск/доходность</h1>
+<p>Отобразим полученные сочетания риск-доходность для 5 бумаг на графике:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">Return.annualized</span>(rtns, <span class="at">geometric =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">StdDev.annualized</span>(rtns, <span class="at">geometric =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">round</span>(<span class="fu">as.numeric</span>(r),<span class="dv">2</span>),<span class="fu">round</span>(<span class="fu">as.numeric</span>(sd),<span class="dv">2</span>), <span class="fu">names</span>(rtns))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(tab)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>tab[,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>((tab[,<span class="dv">1</span>])))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>tab[,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>((tab[,<span class="dv">2</span>])))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tab) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Доходность&#39;</span> ,<span class="st">&#39;Волатильность&#39;</span>, <span class="st">&#39;Тикер&#39;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span></code></pre></div>
+<pre><code>Loading required package: ggplot2</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tab, <span class="fu">aes</span>(<span class="at">x =</span> Волатильность, <span class="at">y =</span> Доходность, <span class="at">label =</span> Тикер))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">geom_text</span>(<span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">vjust  =</span> <span class="sc">-</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ggtitle</span>(<span class="st">&#39;Cоотношение риск/доходность для 5 бумаг&#39;</span>)</span></code></pre></div>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-8-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="матрица-ковариаций" class="slide section level2">
+<h1>Матрица ковариаций</h1>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(rtns)</span></code></pre></div>
+<pre><code>             GAZP         SBER         GMKN         MGNT         MTSS
+GAZP 0.0002741236 0.0001979612 0.0001243733 0.0001204388 0.0001354042
+SBER 0.0001979612 0.0004195167 0.0001396589 0.0001542621 0.0001700743
+GMKN 0.0001243733 0.0001396589 0.0003439045 0.0001021424 0.0001057228
+MGNT 0.0001204388 0.0001542621 0.0001021424 0.0004214811 0.0001263486
+MTSS 0.0001354042 0.0001700743 0.0001057228 0.0001263486 0.0003057608</code></pre>
+<ul>
+<li>Матрицы ковариаций показывают попарные значения ковариаций в портфеле</li>
+<li>Эти матрицы являются одним из основных элементов при портфельном анализе, однако сами по себе достаточно трудны для восприятия</li>
+<li>Для оценки связи между переменными лучше использовать матрицы корреляций</li>
+</ul>
+</div>
+<div id="матрица-корреляций" class="slide section level2">
+<h1>Матрица корреляций</h1>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rtns)</span></code></pre></div>
+<pre><code>          GAZP      SBER      GMKN      MGNT      MTSS
+GAZP 1.0000000 0.5837571 0.4050746 0.3543268 0.4677007
+SBER 0.5837571 1.0000000 0.3676842 0.3668561 0.4748684
+GMKN 0.4050746 0.3676842 1.0000000 0.2682862 0.3260308
+MGNT 0.3543268 0.3668561 0.2682862 1.0000000 0.3519577
+MTSS 0.4677007 0.4748684 0.3260308 0.3519577 1.0000000</code></pre>
+<ul>
+<li>Наибольшие значения корреляций наблюдаются для Газпрома и Сбербанка, минимальные значения корреляций - для Норникеля и Магнита.</li>
+<li>Между всеми бумагами наблюдается достаточно сильная корреляция</li>
+</ul>
+</div>
+<div id="расчет-эффективной-границы-портфеля" class="slide section level2">
+<h1>Расчет эффективной границы портфеля</h1>
+<ul>
+<li>Мы используем функция <code>eff.frontier</code>, которая позволяет находить веса бумаг, максмизирующая показатель Шарпа портфеля.</li>
+<li>Она также позволяет задавать ограничения на значения весов. Если не допускается существование коротких позиций в портфеле, то каждый из весов должен быть больше или равен 0.</li>
+<li>Мы также можем задать максимальную долю одной бумаги в портфеле (аргумент <code>max.allocation</code>), с тем, чтобы уменьшить концентрацию портфеля.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>eff <span class="ot">&lt;-</span> <span class="fu">eff.frontier</span>(<span class="at">returns=</span>rtns, <span class="at">short=</span><span class="st">&quot;no&quot;</span>, <span class="at">max.allocation=</span>.<span class="dv">50</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">risk.premium.up=</span><span class="dv">10</span>, <span class="at">risk.increment=</span>.<span class="dv">01</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(eff)</span></code></pre></div>
+<pre><code>       GAZP       SBER      GMKN      MGNT      MTSS   Std.Dev Exp.Return
+1 0.2920943 0.01480148 0.2534046 0.1778549 0.2618447 0.2078241 0.05585478
+2 0.2744270 0.02754211 0.2668187 0.1737298 0.2574825 0.2078923 0.05868666
+3 0.2567596 0.04028275 0.2802328 0.1696046 0.2531202 0.2080965 0.06151855
+4 0.2390922 0.05302338 0.2936469 0.1654795 0.2487580 0.2084364 0.06435044
+5 0.2214249 0.06576402 0.3070610 0.1613544 0.2443957 0.2089114 0.06718232
+6 0.2037575 0.07850465 0.3204751 0.1572292 0.2400335 0.2095205 0.07001421
+     sharpe
+1 0.2687598
+2 0.2822937
+3 0.2956251
+4 0.3087293
+5 0.3215829
+6 0.3341640</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the optimal portfolio</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>eff.optimal.point <span class="ot">&lt;-</span> eff[eff<span class="sc">$</span>sharpe<span class="sc">==</span><span class="fu">max</span>(eff<span class="sc">$</span>sharpe),]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(eff.optimal.point,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>    GAZP SBER GMKN MGNT MTSS Std.Dev Exp.Return sharpe
+907    0  0.5  0.5    0    0    0.26       0.13    0.5
+909    0  0.5  0.5    0    0    0.26       0.13    0.5
+918    0  0.5  0.5    0    0    0.26       0.13    0.5
+923    0  0.5  0.5    0    0    0.26       0.13    0.5
+927    0  0.5  0.5    0    0    0.26       0.13    0.5
+928    0  0.5  0.5    0    0    0.26       0.13    0.5
+932    0  0.5  0.5    0    0    0.26       0.13    0.5
+937    0  0.5  0.5    0    0    0.26       0.13    0.5
+943    0  0.5  0.5    0    0    0.26       0.13    0.5
+949    0  0.5  0.5    0    0    0.26       0.13    0.5
+953    0  0.5  0.5    0    0    0.26       0.13    0.5
+955    0  0.5  0.5    0    0    0.26       0.13    0.5
+959    0  0.5  0.5    0    0    0.26       0.13    0.5
+964    0  0.5  0.5    0    0    0.26       0.13    0.5
+970    0  0.5  0.5    0    0    0.26       0.13    0.5
+975    0  0.5  0.5    0    0    0.26       0.13    0.5
+986    0  0.5  0.5    0    0    0.26       0.13    0.5</code></pre>
+<ul>
+<li>Эффективный портфель – тот, который имеет максимальное значения показатель Шарпа.</li>
+<li>В нашем случае это портфель, который состоит из 50% Сбербанк, 50% Норникеля.</li>
+<li>Обратите внимание, что доля Магнита равно максимальной доле (выставленное ограничение)</li>
+</ul>
+</div>
+<div id="эффективная-граница" class="slide section level2">
+<h1>Эффективная граница</h1>
+<p>График эффективной границы</p>
+<pre><code>Warning: Ignoring unknown aesthetics: label</code></pre>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-13-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Отметим отдельные бумаги на графике:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span> tab, <span class="fu">aes</span>(<span class="at">x=</span> Волатильность, <span class="at">y =</span> Доходность))<span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> tab, <span class="fu">aes</span>(<span class="at">x=</span> Волатильность, <span class="at">y =</span> Доходность,<span class="at">label =</span> Тикер), <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-14-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="эффективный-портфель-с-короткими-позициями" class="slide section level2">
+<h1>Эффективный портфель с короткими позициями</h1>
+<p>Рассмотрим эффективный портфель, в котором разрешены короткие позиции. Это означает, что некоторые веса могут быть отрицательными.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>eff2 <span class="ot">&lt;-</span> <span class="fu">eff.frontier</span>(<span class="at">returns=</span>rtns, <span class="at">short=</span><span class="st">&quot;yes&quot;</span>, <span class="at">max.allocation=</span>.<span class="dv">50</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">risk.premium.up=</span><span class="dv">10</span>, <span class="at">risk.increment=</span>.<span class="dv">01</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the optimal portfolio</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>eff.optimal.point2 <span class="ot">&lt;-</span> eff2[eff2<span class="sc">$</span>sharpe<span class="sc">==</span><span class="fu">max</span>(eff2<span class="sc">$</span>sharpe),]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(eff.optimal.point2,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>    GAZP SBER GMKN MGNT MTSS Std.Dev Exp.Return sharpe
+51 -0.29  0.5  0.5 0.08 0.21    0.26       0.13   0.52</code></pre>
+<p>Оптимальный портфель с короткими позициями предлагает нам занять короткую позицию по Газпрома и Магнита, по другим – длинные позиции.</p>
+</div>
+<div id="риск-доходность-портфеля-с-короткими-позициями" class="slide section level2">
+<h1>Риск-доходность портфеля с короткими позициями</h1>
+<pre><code>Warning: Ignoring unknown aesthetics: label</code></pre>
+<p><img src="lecture-5_files/figure-slidy/unnamed-chunk-16-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Разрешение занимать короткие позиции позволило повысить доходность портфеля, но и повысило уровень риска. Однако к-т Шарпа для этого портфеля больше (0,77 вместо 0,63).</p>
+</div>
+<div id="ограничение-оптимизации-портфелей-по-риск-доходности" class="slide section level2">
+<h1>Ограничение оптимизации портфелей по риск-доходности</h1>
+<ol style="list-style-type: decimal">
+<li>Все оценки доходности и риска, которые мы делали, основывались на <strong>исторических данных</strong>. Мы использовали выборочные значения доходностей, дисперсий и ковариационной матрицы (корряляции активов) и предполагали, чтоб они хорошо отражают ожидаемые значения. Это достаточно большое количетсво параметров. Как показывает практика, классифические портфели по Марковицу, максимизирующие показатель Шарпа, являются нестабильными. Существуют другие методы, которые позволяют оценивать ковариационную матрицу, к примеру, <strong>метод Ледуа-Вульфа</strong> ( <em>Ledoit-Wolf, 2003</em> ). По сути это shrinkage метод, который "стабилизирует ковариационную матрицу – возвращает экстремальные значения корряляций к центральным значениям.</li>
+<li>Можно также использовать другие методы для оценок ожидаемых доходностей вместо выборочных исторических доходностей. Одним из таких методов является <strong>метод Джеймса-Стайна</strong> ( <em>James–Stein estimator, 1961</em>), который также основан на идее shrinkage.<br />
+</li>
+<li>В классическом варианте оптимизации по Марковицу, мы предполагаем, что <strong>доходности имеют нормальное распределение</strong> – полностью описываются средним и стандартным отклонением. Однако мы знаем, что доходности не распределены нормально. Есть методы, которые позволяют обойти эти ограничения.</li>
+</ol>
+</div>
+<div id="оптимальный-портфель-из-etf-торгующихся-на-московской-бирже" class="slide section level2">
+<h1>Оптимальный портфель из ETF, торгующихся на Московской Бирже</h1>
+<ul>
+<li>портфели доступны и регулярно обновляются на <a href="http://models.fief.ru/shiny/portfolio/">http://models.fief.ru/shiny/portfolio/</a></li>
+<li>На Москоской Бирже есть торгуемые биржевые фонды (ETF), доходность которых призвана повторять доходность различных российских и международных биржевых индексов. Преимущества - позволяет “не выбирать” отдельные активы и следить за ними, ниже издержки по сравнению с ПИФами, удобство ликвидности.</li>
+<li>Оценка out-of-sample доходностей различных оптимальных инвестиционных инвестиционных портефелей.</li>
+</ul>
+<p><strong>Global Minimum Variance Portfolio (GMVP)</strong> – портфель, минимизирующий риск портфеля.</p>
+<p><strong>Maximum Sharpe Ratio Portfolio (MSRP)</strong> – портфель, максимизирующий доходность портфеля, скорректированную на его риск (по Марковицу).</p>
+<div align="center">
+<p><img src="fig/portfolio-etf.png" width="653" height="496" /></p>
+</div>
+</div>
+<div id="cписок-использованных-источников" class="slide section level2">
+<h1>Cписок использованных источников</h1>
+<ol style="list-style-type: decimal">
+<li>“Statistics and Data Analysis for Financial Engineering” (David Ruppert &amp; David Matteson)</li>
+<li>Analyzing Financial Data and Implementing Financial Models Using R (Clifford Ang).</li>
+<li><a href="(http://economistatlarge.com/portfolio-theory/introduction-to-portfolio-theory)">“Introduction to Modern Portfolio Theory”</a></li>
+<li><a href="https://faculty.washington.edu/ezivot/econ424/portfoliofunctions.pdf">“Computing Efficient Portfolios”</a> (Eric Zivot)</li>
+<li><a href="http://www.ledoit.net/honey.pdf">Ledoit, Olivier, and Michael Wolf. “Honey, I shrunk the sample covariance matrix.” (2003).</a></li>
+</ol>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>
