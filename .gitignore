@@ -11,6 +11,9 @@ ojdata/*
 *.Rproj
 *.Rhistory
 *.zip
+*.rdx
+*.rdb
+
 
 # Pytests
 .pytest_cache/
