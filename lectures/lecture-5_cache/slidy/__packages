@@ -1,0 +1,11 @@
+base
+RColorBrewer
+knitr
+forecast
+quadprog
+zoo
+xts
+PerformanceAnalytics
+data.table
+QuantTools
+ggplot2
