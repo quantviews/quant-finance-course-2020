@@ -1,0 +1,7 @@
+base
+RColorBrewer
+knitr
+forecast
+zoo
+xts
+PerformanceAnalytics

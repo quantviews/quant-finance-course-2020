@@ -1,7 +1,7 @@
 ---
 title: 'СAPM -- Capital Asset Pricing Model <br> "Количественные финансы" '
 author: "Салихов Марсель (marcel.salikhov@gmail.com)"
-date: "2020-02-11"
+date: "2021-02-13"
 output:
   slidy_presentation:
     css: styles.css
@@ -24,7 +24,7 @@ output:
 library("RColorBrewer")    # brewer.pal
 library("knitr")           # opts_chunk
 library(forecast)
-
+library(xts)
 
 # color palette
 palette(brewer.pal(6, "Set1"))
@@ -310,32 +310,33 @@ $\beta < 1$ -- консервативный портфель
 # rf_rate_d <- (100+rf_rate$T1W)^(1/365)-1
 
 plot(rf_rate_d, main = 'Безрисковая ставка (Mosprime)')
-ex_rosn_rtns <- ROSN.rtn - rf_rate_d
-ex_micex_rtns <- MICEX.rtn - rf_rate_d
+# dat <- merge(ROSN.rtn, rf_rate_d)
+# ex_rosn_rtns <- ROSN.rtn - rf_rate_d
+# ex_micex_rtns <- MICEX.rtn - rf_rate_d
 
-fit <- lm(ex_rosn_rtns ~ ex_micex_rtns)
+fit <- lm(ex_rosn_rtns ~ ex_micex_rtns, data = dat)
 summary(fit)
 ```
 
 Интерпретация: 
 
-1. Значение t-статистики при константе равно -0,166. Мы не можем отвергнуть гипотезу о том, что значение коэффициента не равно нулю. 
+1. Значение t-статистики при константе равно 2,21. Мы можем отвергнуть гипотезу о том, что значение коэффициента равно нулю. 
 
 2. Коэффициент при доходности индекса близок к 1. Это означает, что бета акций Роснефти близка к 1.
 
-3. R^2 = 0,55. Это означает, что 55% дисперсии доходности Роснефти "объясняется" динамикой широкого рынка, 45% -- дисперсии объясняется специфическими факторами. 
+3. $R^2$ = 0,57. Это означает, что 55% дисперсии доходности Роснефти "объясняется" динамикой широкого рынка, 43% -- дисперсии объясняется специфическими факторами. 
 
 ## Расчет беты в R -- 2
 
-рассмотрим вариант расчет регрессии без свободного члена (intercept term). В R такое уравнение рассчитывается добавлением параметра `+0` в формуле. 
+рассмотрим вариант расчет регрессии без свободного члена (`intercept term`). В R такое уравнение рассчитывается добавлением параметра `+0` в формуле. 
 
 ```{r, cache=FALSE}
-fit0 <- lm(ex_rosn_rtns ~ ex_micex_rtns + 0)
+fit0 <- lm(ex_rosn_rtns ~ ex_micex_rtns + 0, data = dat)
 summary(fit0)
-library(xts)
-plot(coredata(ex_micex_rtns), coredata(ex_rosn_rtns), 
+
+plot(coredata(dat$ex_micex_rtns), coredata(dat$ex_rosn_rtns), 
      xlab = 'избыточная доходность индекса ММВБ', ylab = 'избыточная доходность Роснефти')
-abline(lm(ex_rosn_rtns ~ ex_micex_rtns + 0), col="red")
+abline(lm(dat$ex_rosn_rtns ~ dat$ex_micex_rtns + 0), col="red")
 
 
 ```
@@ -359,7 +360,7 @@ CAPM.alpha(Ra = ROSN.rtn,Rb = MICEX.rtn,Rf = rf_rate_d)
 
 Пакет `PerformanceAnalytics` дает возможность быстро делать "скользящие" оценки коэффициентов -- то есть мы каждый раз используем лишь X предыдущих значений для расчетов (в данном случаем X = 250, это примерно расчет за последние 365 календарных дней)
 
-```{r}
+```{r, cache=TRUE}
 chart.RollingRegression(Ra = ROSN.rtn,Rb = MICEX.rtn,Rf = rf_rate_d,width = 250, attribute = "Beta",
                         main = 'Скользящая бета для акций Роснефти')
 chart.RollingRegression(Ra = ROSN.rtn,Rb = MICEX.rtn,Rf = rf_rate_d,width = 250, attribute = "Alpha",
