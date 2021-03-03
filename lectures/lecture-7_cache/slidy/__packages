@@ -1,0 +1,12 @@
+base
+RColorBrewer
+knitr
+forecast
+data.table
+QuantTools
+zoo
+xts
+MASS
+mvtnorm
+mnormt
+rgl
