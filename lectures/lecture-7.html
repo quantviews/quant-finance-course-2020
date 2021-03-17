@@ -317,7 +317,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Непараметрическая оценка VaR и ES для индексного фонда</h1>
 <p>Предположим, что ваша позиция это 1 млн рублей, вложенный в индексный фонд ММВБ.</p>
 <p>Вы хотите оценить VaR на 1 день.</p>
-<p>Построим график ежедневных доходностей индекса ММВБ в 2010-2019 гг.</p>
+<p>Построим график ежедневных доходностей индекса ММВБ в 2010-2021 гг.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(MICEX.rtn, <span class="at">main =</span> <span class="st">&#39;Дневные доходности индекса MOEX&#39;</span>)</span></code></pre></div>
 <p><img src="lecture-7_files/figure-slidy/unnamed-chunk-3-1.png" width="1152" style="display: block; margin: auto;" /></p>
 </div>
@@ -332,10 +332,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ES_nonp <span class="ot">=</span> <span class="sc">-</span><span class="dv">10</span><span class="sc">^</span><span class="dv">6</span> <span class="sc">*</span> <span class="fu">sum</span>(MICEX.rtn <span class="sc">*</span> IEVar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sum</span>(IEVar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># суммируем и считаем среднее значение убытка</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>ES_nonp <span class="co"># непараметрическая оценка ES</span></span></code></pre></div>
 <pre><code>[1] 26740.31</code></pre>
-<p>5%-ая квантиль данного распределения доходностей равна 2%.</p>
-<p>Это означает, что на исторических данных дневная доходность, превышающая 2%, наблюдалась в менее чем 5% времени.</p>
+<p>5%-ая квантиль данного распределения доходностей равна -1,7%.</p>
+<p>Это означает, что на исторических данных дневная доходность, превышающая -1,7%, наблюдалась в менее чем 5% времени.</p>
 <p>Таким образом, мы можем оценить, что существует 5% вероятность, что убыток такого размера может возникнуть на следующий день.</p>
-<p><span class="math display">\[\hat{VaR}(0,05, 1д) = 10^6 * 0,02 = 20366.15 \]</span> ES рассчитывается путем усреднения всех доходностей, которые были меньше 2% и умножения их на величину портфеля. В нашем случае <span class="math inline">\(ES(0,05) = 31348.33\)</span></p>
+<p><span class="math display">\[\hat{VaR}(0,05, 1д) = 10^6 * 0,017 = 17065.52 \]</span> ES рассчитывается путем усреднения всех доходностей, которые были меньше 1,7% и умножения их на величину портфеля. В нашем случае <span class="math inline">\(ES(0,05) = 26740.31\)</span></p>
 </div>
 <div id="параметрическая-оценка-var-и-es" class="slide section level2">
 <h1>Параметрическая оценка VaR и ES</h1>
@@ -408,7 +408,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1] 16935.31</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ES_par</span></code></pre></div>
 <pre><code>[1] 24486.85</code></pre>
-<p>Параметрическая оценка VaR (19905) близка к непараметрической оценке (20366), но несколько меньшее ее. Параметрическая оценка ES = 28591, что меньше чем не-параметрическая оценка ES (31348). Это связано с тем, что наиболее левая часть распределения доходностей (90 из 1782 наблюдений) является более тяжелой по сравнению с распределением Стьюдента с df = 5.16</p>
+<p>Параметрическая оценка VaR (16935) близка к непараметрической оценке (17065), но несколько меньшее ее. Параметрическая оценка ES = 24486, что меньше чем не-параметрическая оценка ES (26740). Это связано с тем, что наиболее левая часть распределения доходностей (90 из 1782 наблюдений) является более тяжелой по сравнению с распределением Стьюдента с df = 5.16</p>
 <p>Формула ES для распределения Стьюдента, используемая в расчете:</p>
 <p><span class="math display">\[\hat{ES}^t = S \times \{ -\mu + \sigma  \frac{f_{_\nu}F_{\nu}^{-1}(\alpha)}{\alpha}[\frac{\nu+\{F_{\nu}^{-1}(\alpha)\}^2\}}{\nu-1}] \} \]</span></p>
 </div>
@@ -496,9 +496,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Распределение Стьюдента часто используется в финансах из-за более тяжелых хвостов</li>
 <li>Величина df определяет, на сколько тяжелые хвосты. Чем меньше df, тем они более тяжелые.</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(mvtnorm)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(mnormt)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(rgl)</span>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mnormt)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgl)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>rtns2 <span class="ot">&lt;-</span> rtns[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="co"># две бумаги - Газпром и Сбербанк</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">mean</span>(rtns2[,<span class="dv">1</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="fu">mean</span>(rtns2[,<span class="dv">2</span>], , <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co"># вектор средних</span></span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">cov</span>(rtns2, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)   <span class="co"># матрица ковариаций</span></span>
@@ -537,30 +537,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Стоимость портфеля = 1 млн рублей, распределенных равными долями. То есть доля каждой бумаги в портфеле равна 1/3</li>
 <li>Оценим VaR и ES для данного портфеля с допущением, что доходности бумаги имеют многомерное t-распределение.</li>
 </ul>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(mnormt)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> .<span class="dv">05</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>rtns3 <span class="ot">&lt;-</span> rtns[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>rtns3 <span class="ot">&lt;-</span> rtns3[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>),]</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rtns3, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>) <span class="co"># матрица корреляций 3 бумаг</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mnormt)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> .<span class="dv">05</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>rtns3 <span class="ot">&lt;-</span> rtns[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>rtns3 <span class="ot">&lt;-</span> rtns3[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>),]</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rtns3, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>) <span class="co"># матрица корреляций 3 бумаг</span></span></code></pre></div>
 <pre><code>          GAZP      SBER      GMKN
 GAZP 1.0000000 0.5591981 0.3924689
 SBER 0.5591981 1.0000000 0.3433967
 GMKN 0.3924689 0.3433967 1.0000000</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">2.0</span>,<span class="fl">7.0</span>,.<span class="dv">05</span>) <span class="co"># вектор возможных значений параметра тяжести хвоста (tail index)</span></span>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">2.0</span>,<span class="fl">7.0</span>,.<span class="dv">05</span>) <span class="co"># вектор возможных первоначальных значений параметра тяжести хвоста (tail index)</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(df)</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>loglik <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">0</span>,n)</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># найдем параметр df, который максимизирует log-likelehood</span></span>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">cov.trob</span>(rtns3,<span class="at">nu=</span>df) <span class="co"># оценка матрицы ковариации для многомерного t-распределения</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">cov.trob</span>(rtns3,<span class="at">nu=</span>df) <span class="co"># оценка матрицы ковариации для многомерного t-распределения - функция из пакета MASS</span></span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  loglik[i] <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">log</span>(<span class="fu">dmt</span>(rtns3,<span class="at">mean=</span>fit<span class="sc">$</span>center,<span class="at">S=</span>fit<span class="sc">$</span>cov,<span class="at">df=</span>df[i])))</span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>indicate <span class="ot">=</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(df))[ (loglik<span class="sc">==</span> <span class="fu">max</span>(loglik)) ]</span>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>dfhat <span class="ot">=</span> df[indicate] <span class="co"># максизирующей LL значение df</span></span>
 <span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>estim <span class="ot">=</span> <span class="fu">cov.trob</span>(rtns3,<span class="at">nu=</span>dfhat,<span class="at">cor=</span><span class="cn">TRUE</span>) <span class="co"># оценка матрицы ковариации для многомерного t-распределения</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>estim <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">cov.trob</span>(rtns3, <span class="at">nu=</span>dfhat, <span class="at">cor=</span><span class="cn">TRUE</span>) <span class="co"># оценка матрицы ковариации для многомерного t-распределения</span></span>
 <span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits=</span><span class="dv">3</span>)</span>
 <span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>muhat <span class="ot">=</span> estim<span class="sc">$</span>center</span>
 <span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>covhat <span class="ot">=</span> estim<span class="sc">$</span>cov</span>
@@ -576,7 +577,7 @@ GMKN 0.000066 7.05e-05 1.72e-04</code></pre>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>muP <span class="ot">=</span> <span class="fu">as.numeric</span>(w <span class="sc">%*%</span> muhat) <span class="co">#ожидаемая доходность портфеля</span></span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>varP <span class="ot">=</span> <span class="fu">as.numeric</span>(w <span class="sc">%*%</span> covhat <span class="sc">%*%</span> w) <span class="co">#дисперсия портфеля</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>sdP <span class="ot">=</span> <span class="fu">sqrt</span>(varP) <span class="co"># с.к.о. порфеля</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>sdP <span class="ot">=</span> <span class="fu">sqrt</span>(varP) <span class="co"># с.к.о. портфеля</span></span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>muP</span></code></pre></div>
 <pre><code>[1] 0.000339</code></pre>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sdP</span></code></pre></div>
@@ -584,7 +585,7 @@ GMKN 0.000066 7.05e-05 1.72e-04</code></pre>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>sigmaP <span class="ot">=</span> <span class="fu">sqrt</span>((dfhat<span class="dv">-2</span>)<span class="sc">/</span>dfhat) <span class="sc">*</span> sdP <span class="co"># параметр лямбда для распределения Стьюдента</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sigmaP</span></code></pre></div>
 <pre><code>[1] 0.00776</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>VaR <span class="ot">=</span> <span class="sc">-</span>(muP <span class="sc">+</span> sigmaP<span class="sc">*</span> <span class="fu">qt</span>(alpha,dfhat))</span>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>VaR <span class="ot">=</span> <span class="sc">-</span>(muP <span class="sc">+</span> sigmaP<span class="sc">*</span> <span class="fu">qt</span>( alpha, dfhat))</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span><span class="sc">^</span><span class="dv">6</span><span class="sc">*</span>VaR</span></code></pre></div>
 <pre><code>[1] 15786</code></pre>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>qalpha <span class="ot">=</span> <span class="fu">qt</span>(alpha,<span class="at">df=</span>dfhat)</span>
@@ -618,7 +619,7 @@ GMKN 0.000066 7.05e-05 1.72e-04</code></pre>
 <ul>
 <li>Исторические данные, которые предоставляют рейтинговые агентства, можно использовать для оценки вероятности дефолта.</li>
 </ul>
-<p><strong>Накопленные средние уровни дефолтов % (1970-2013, Moody’s)</strong></p>
+<p><strong>Накопленные средние уровни дефолтов, % (1970-2013, Moody’s)</strong></p>
 <table>
 <thead>
 <tr class="header">
@@ -715,9 +716,14 @@ GMKN 0.000066 7.05e-05 1.72e-04</code></pre>
 </tr>
 </tbody>
 </table>
-<p>В таблице показана вероятность дефолта для компаний, начинающих с определенного кредитного рейтинга. Компания с первоначальным кредитным рейтингом <strong>Baa</strong> имеет вероятность 0,174% дефолта к концу первого года, 0,504% к концу второго года и так далее.</p>
+<p>В таблице показана вероятность дефолта (PD) для компаний, начинающих с определенного кредитного рейтинга. Компания с первоначальным кредитным рейтингом <strong>Baa</strong> имеет вероятность 0,174% дефолта к концу первого года, 0,504% к концу второго года и так далее.</p>
 <p>Для компании, которая начинает с хорошего кредитного рейтинга, вероятности дефолта со временем увеличиваются. Для компании, которая начинает с низкого кредитного рейтинга, вероятности дефолта со временем снижаются.</p>
+<blockquote>
 <p>В России многие компании не имеют кредитных рейтингов от международных рейтинговых агентств.</p>
+</blockquote>
+<p>Каждый год на основе матриц миграции (из одного в рейтинга другой) можно рассчитать вероятности дефолта на определенный горизонт.</p>
+<p>Credit VaR определяется как:</p>
+<p><span class="math display">\[1 - \alpha-quantile (Credit Loss) - ExpectedLoss \]</span></p>
 </div>
 <div id="модель-мертона" class="slide section level2">
 <h1>Модель Мертона</h1>
