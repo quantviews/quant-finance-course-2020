@@ -29,6 +29,7 @@ logs/
 *.log
 
 books/
+data/
 labs/
 org/
 R/
@@ -38,4 +39,5 @@ labs_python
 leveraged/
 pdf/
 notebooks/
+exams/
 .Rproj.user/
